@@ -1,0 +1,80 @@
+import { 
+  Calculator, Table, ShieldCheck, 
+  Brain, Zap, Target, ArrowRight,
+  TrendingUp, Sparkles, Info, Shield
+} from 'lucide-react';
+import { useOutletContext } from 'react-router-dom';
+import { ONE_C_INSIGHTS } from './SAIAgentLogic';
+
+const OneCAnalysis = () => {
+  const { isContentFullscreen } = useOutletContext<any>();
+
+  return (
+    <div className={`flex flex-col ${isContentFullscreen ? 'h-screen' : 'h-[calc(100vh-140px)]'} animate-in fade-in duration-500 pb-4 overflow-hidden`}>
+      
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8">
+        <div className="space-y-1">
+          <div className="flex items-center space-x-3 mb-2">
+            <span className="px-2 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 rounded-md text-[10px] font-black uppercase tracking-widest italic shadow-inner border border-amber-100 dark:border-amber-800">Financial Core Analysis</span>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">1C:Enterprise vs SmartAgent ERP Benchmarking</span>
+          </div>
+          <h1 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tight italic">1C Analizi və Strateji Təkliflər</h1>
+        </div>
+      </div>
+
+      {/* Hero / Summary */}
+      <div className="bg-gradient-to-br from-slate-900 to-amber-950 p-10 rounded-[4rem] text-white relative overflow-hidden shadow-2xl mb-8 group">
+          <div className="relative z-10 max-w-3xl space-y-6">
+              <div className="inline-flex items-center px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-widest italic border border-white/10">
+                  <Calculator className="w-3.5 h-3.5 mr-2 text-amber-400" /> Accounting Benchmarking
+              </div>
+              <h2 className="text-4xl font-black uppercase italic leading-tight tracking-tight">SmartAgent ERP: 1C Dəqiqliyi və Aİ Sürəti.</h2>
+              <p className="text-sm font-bold text-slate-400 italic leading-relaxed">
+                  1C:Enterprise-in illərdir formalaşmış mühasibat və uçot məntiqini analiz edərək, bu dəqiqliyi SmartAgent-in müasir bulud və süni intellekt infrastrukturuna gətiririk. Məqsədimiz rəqəmsal transformasiyanı 100% dəqiqliklə təmin etməkdir.
+              </p>
+          </div>
+          <Calculator className="absolute top-[-50px] right-[-50px] w-96 h-96 text-white/5 opacity-20 group-hover:scale-110 transition-transform duration-1000" />
+      </div>
+
+      {/* Insights Grid */}
+      <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 pb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {ONE_C_INSIGHTS.map((insight: any, idx: number) => (
+            <div key={idx} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-[3rem] shadow-sm hover:shadow-xl hover:border-amber-500/50 transition-all group flex flex-col relative overflow-hidden">
+              <div className="flex items-center justify-between mb-8 relative z-10">
+                <div className={`p-4 bg-amber-50 dark:bg-amber-900/30 rounded-2xl text-amber-600 shadow-inner group-hover:scale-110 transition-transform`}>
+                  <insight.categoryIcon className="w-6 h-6" />
+                </div>
+                <div className="flex flex-col items-end">
+                    <span className={`text-[8px] font-black px-3 py-1 rounded-full uppercase italic ${
+                        insight.priority === 'High' ? 'bg-rose-500 text-white' : 'bg-amber-500 text-white'
+                    }`}>{insight.priority} Priority</span>
+                    <span className="text-[9px] font-bold text-slate-400 uppercase italic mt-1">{insight.category}</span>
+                </div>
+              </div>
+
+              <div className="space-y-4 flex-1 relative z-10">
+                <h3 className="text-lg font-black text-slate-800 dark:text-white uppercase italic tracking-tight">{insight.title}</h3>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-bold italic leading-relaxed">
+                  {insight.description}
+                </p>
+              </div>
+
+              <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between relative z-10">
+                <div className="flex items-center text-[10px] font-black text-amber-600 dark:text-amber-400 uppercase tracking-widest italic">
+                  <TrendingUp className="w-4 h-4 mr-1.5" /> {insight.benefit}
+                </div>
+                <button className="p-2 bg-slate-50 dark:bg-slate-800 rounded-xl hover:bg-amber-600 hover:text-white transition-all text-slate-400">
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default OneCAnalysis;

@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Default (AZ) - 14px * 1.05 = 14.7px */
+  --base-font: 'Inter', system-ui, -apple-system, sans-serif;
+  --base-font-size: 14.7px;
+}
+
+[data-lang="en"] {
+  /* 14.2px * 1.05 = 14.91px */
+  --base-font: 'Outfit', sans-serif;
+  --base-font-size: 14.91px;
+}
+
+[data-lang="ru"] {
+  /* 13.5px * 1.05 = 14.175px */
+  --base-font: 'Roboto', sans-serif;
+  --base-font-size: 14.175px;
+}
+
+@layer base {
+  html {
+    font-size: var(--base-font-size);
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+    /* Ensure Azerbaijani casing rules are used for uppercase transform */
+    text-transform: none; 
+  }
+  
+  html[lang="az"], :lang(az) {
+    font-variant-caps: normal;
+  }
+  
+  body {
+    @apply font-sans antialiased bg-[#F8F9FA] text-slate-900;
+    font-family: var(--base-font) !important;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-[#F8F9FA] text-slate-800 font-sans;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .dark body {
+    @apply bg-slate-950 text-slate-200;
+  }
+}
+
+/* DreamsPOS scrollbar stili */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #e2e8f0;
+  border-radius: 10px;
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+}
+
+/* Xüsusi Cədvəl sətir-altı dizayn (DreamsPOS) */
+tr.dashed-border-bottom {
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+tr.solid-border-bottom {
+  border-bottom: 1px solid #f1f5f9;
+}
+
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 3s infinite ease-in-out;
+}
