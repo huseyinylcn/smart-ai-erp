@@ -394,5 +394,30 @@ export const inventoryApi = {
   deleteItem: (id: string, companyId: string) => {
     return apiFetch(`/inventory/items/${id}`, { method: 'DELETE' }, companyId);
   },
-  getNextCodes: (companyId: string) => apiFetch(`/inventory/next-codes?companyId=${companyId}`, {}, companyId)
+  getNextCodes: (companyId: string) => apiFetch(`/inventory/next-codes?companyId=${companyId}`, {}, companyId),
+
+  createCategory: async (_data: unknown, _companyId: string) => {
+    console.warn('[inventoryApi] createCategory: demo — no persistence');
+    return { ok: true as const };
+  },
+  updateCategory: async (_id: string, _data: unknown, _companyId: string) => {
+    console.warn('[inventoryApi] updateCategory: demo — no persistence');
+    return { ok: true as const };
+  },
+  deleteCategory: async (_id: string, _companyId: string) => {
+    console.warn('[inventoryApi] deleteCategory: demo — no persistence');
+    return { ok: true as const };
+  },
+  createSubCategory: async (_data: unknown, _companyId: string) => {
+    console.warn('[inventoryApi] createSubCategory: demo — no persistence');
+    return { ok: true as const };
+  },
+  updateSubCategory: async (_id: string, _data: unknown, _companyId: string) => {
+    console.warn('[inventoryApi] updateSubCategory: demo — no persistence');
+    return { ok: true as const };
+  },
+  deleteSubCategory: async (_id: string, _companyId: string) => {
+    console.warn('[inventoryApi] deleteSubCategory: demo — no persistence');
+    return { ok: true as const };
+  },
 };

@@ -8,14 +8,25 @@ import {
 import { useNavigate } from 'react-router-dom';
 import SimulationWizard from '../../components/SimulationWizard';
 
+type ContractRow = {
+  id: string;
+  partner: string;
+  type: string;
+  date: string;
+  expiryDate: string;
+  amount: number;
+  status: string;
+  qrp: boolean;
+};
+
 const ContractList = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
 
   // Simulation of Contracts Data
-  const [contracts, setContracts] = useState(() => {
+  const [contracts, setContracts] = useState<ContractRow[]>(() => {
     const saved = localStorage.getItem('TENGRY_CONTRACTS');
-    return saved ? JSON.parse(saved) : [
+    return saved ? (JSON.parse(saved) as ContractRow[]) : [
       { id: 'CONT-SIM-01', partner: 'Metal Sənaye (Bakı) MMC', type: 'ALIBAL (Mallar)', date: '2024-09-15', expiryDate: '2025-09-15', amount: 45600, status: 'ACTIVE', qrp: true },
       { id: 'CONT-SIM-02', partner: 'Tekstil Dünyası Group', type: 'ALIBAL (Mallar)', date: '2024-09-16', expiryDate: '2025-09-16', amount: 12450, status: 'ACTIVE', qrp: true },
       { id: 'CONT-SIM-03', partner: 'Kimya və Boya Logistika', type: 'ALIBAL (Mallar)', date: '2024-09-17', expiryDate: '2025-09-17', amount: 8900, status: 'ACTIVE', qrp: true },

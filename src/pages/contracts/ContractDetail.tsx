@@ -4,7 +4,9 @@ import {
   DollarSign, FileText, ClipboardList, Info,
   Download, ChevronRight, 
   ShieldCheck,
-  Printer
+  Printer,
+  CheckCircle2,
+  AlertTriangle
 } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 

@@ -7,13 +7,23 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+type PriceAgreementRow = {
+  id: string;
+  contractId: string;
+  partner: string;
+  itemCount: number;
+  date: string;
+  status: string;
+  totalEstimated: number;
+};
+
 const PriceAgreementList = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
 
-  const [agreements, setAgreements] = useState(() => {
+  const [agreements, setAgreements] = useState<PriceAgreementRow[]>(() => {
     const saved = localStorage.getItem('TENGRY_QRP');
-    return saved ? JSON.parse(saved) : [
+    return saved ? (JSON.parse(saved) as PriceAgreementRow[]) : [
       { id: 'QRP-SIM-01', contractId: 'CONT-SIM-01', partner: 'Metal Sənaye (Bakı) MMC', itemCount: 15, date: '2024-09-20', status: 'ACTIVE', totalEstimated: 45600 },
       { id: 'QRP-SIM-02', contractId: 'CONT-SIM-02', partner: 'Tekstil Dünyası Group', itemCount: 8, date: '2024-09-21', status: 'ACTIVE', totalEstimated: 12450 },
       { id: 'QRP-SIM-03', contractId: 'CONT-SIM-03', partner: 'Kimya və Boya Logistika', itemCount: 10, date: '2024-09-22', status: 'ACTIVE', totalEstimated: 8900 },

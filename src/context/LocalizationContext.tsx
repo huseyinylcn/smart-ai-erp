@@ -56,7 +56,6 @@ const uiStrings: Record<Language, Record<string, string>> = {
     'nav.i̇stifadəçilər': 'İstifadəçilər',
     'nav.sistem_ayarları': 'Sistem Ayarları',
     'dashboard.title': 'İdarəetmə Paneli',
-    'dashboard.title': 'İdarəetmə Paneli',
     'dashboard.new_page': 'Yeni Səhifə',
     'dashboard.edit': 'Düzəliş Et',
     'dashboard.finish_edit': 'Düzəlişi Bitir',
@@ -117,7 +116,6 @@ const uiStrings: Record<Language, Record<string, string>> = {
     'nav.ai_admin_köməkçisi': 'AI Admin Assistant',
     'nav.i̇stifadəçilər': 'Users',
     'nav.sistem_ayarları': 'Settings',
-    'dashboard.title': 'Management Dashboard',
     'dashboard.title': 'Management Dashboard',
     'dashboard.new_page': 'New Page',
     'dashboard.edit': 'Edit Dashboard',
@@ -221,7 +219,7 @@ export const LocalizationProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
   const t = (key: string) => {
     const dict = uiStrings[language] || uiStrings['az'];
-    return dict[key] || undefined;
+    return dict[key] ?? key;
   };
 
   useEffect(() => {

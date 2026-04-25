@@ -112,7 +112,7 @@ const ContractCreate = () => {
   }, [isEdit, id]);
 
   const handleVoenSearch = () => {
-    const partner = activeList.find(s => s.taxId === formData.taxId || s.taxid === formData.voen || s.taxId === formData.voen);
+    const partner = activeList.find(s => s.taxId === formData.voen || s.taxid === formData.voen);
     if (partner) {
         setFormData({ ...formData, partnerName: partner.name, voen: partner.taxId || partner.taxid || '' });
         setSearchTerm(partner.name);

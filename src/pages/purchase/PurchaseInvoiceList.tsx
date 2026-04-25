@@ -8,6 +8,28 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+type PurchaseReceiptRow = {
+  id: string;
+  number: string;
+  vendor: string;
+  date: string;
+  warehouse: string;
+  status: string;
+  invoiceStatus: string;
+};
+
+type PurchaseInvoiceRow = {
+  id: string;
+  number: string;
+  vendor: string;
+  date: string;
+  total: number;
+  status: string;
+  ref: string;
+  eInvNo: string;
+  eInvDate: string;
+};
+
 const PurchaseInvoiceList = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'RECEIPT' | 'INVOICE'>('RECEIPT');
@@ -15,9 +37,9 @@ const PurchaseInvoiceList = () => {
   const [selectedDocs, setSelectedDocs] = useState<string[]>([]);
 
   // Load from localStorage or use defaults
-  const [receipts, setReceipts] = useState(() => {
+  const [receipts, setReceipts] = useState<PurchaseReceiptRow[]>(() => {
     const saved = localStorage.getItem('TENGRY_PURCHASE_RECEIPTS');
-    return saved ? JSON.parse(saved) : [
+    return saved ? (JSON.parse(saved) as PurchaseReceiptRow[]) : [
       { id: 'SIM_R_01', number: 'GRN-2024-10-01', vendor: 'Metal Sənaye (Bakı) MMC', date: '2024-10-01', warehouse: 'Əsas Anbar', status: 'COMPLETED', invoiceStatus: 'INVOICED' },
       { id: 'SIM_R_02', number: 'GRN-2024-10-02', vendor: 'Tekstil Dünyası Group', date: '2024-10-02', warehouse: 'Əsas Anbar', status: 'COMPLETED', invoiceStatus: 'INVOICED' },
       { id: 'SIM_R_03', number: 'GRN-2024-10-03', vendor: 'Kimya və Boya Logistika', date: '2024-10-03', warehouse: 'Əsas Anbar', status: 'COMPLETED', invoiceStatus: 'INVOICED' },
@@ -26,9 +48,9 @@ const PurchaseInvoiceList = () => {
     ];
   });
 
-  const [invoices, setInvoices] = useState(() => {
+  const [invoices, setInvoices] = useState<PurchaseInvoiceRow[]>(() => {
     const saved = localStorage.getItem('TENGRY_PURCHASE_INVOICES');
-    return saved ? JSON.parse(saved) : [
+    return saved ? (JSON.parse(saved) as PurchaseInvoiceRow[]) : [
       { id: 'SIM_I_01', number: 'PINV-2024-10-01', vendor: 'Metal Sənaye (Bakı) MMC', date: '2024-10-01', total: 45600, status: 'COMPLETED', ref: 'PO-SIM-01', eInvNo: 'E-TAX-1001', eInvDate: '2024-10-01' },
       { id: 'SIM_I_02', number: 'PINV-2024-10-02', vendor: 'Tekstil Dünyası Group', date: '2024-10-02', total: 12450, status: 'COMPLETED', ref: 'PO-SIM-02', eInvNo: '', eInvDate: '' },
       { id: 'SIM_I_03', number: 'PINV-2024-10-03', vendor: 'Kimya və Boya Logistika', date: '2024-10-03', total: 8900, status: 'COMPLETED', ref: 'PO-SIM-03', eInvNo: 'E-TAX-1003', eInvDate: '2024-10-03' },

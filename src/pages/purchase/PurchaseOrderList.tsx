@@ -7,14 +7,24 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+type PurchaseOrderRow = {
+  id: string;
+  number: string;
+  vendor: string;
+  date: string;
+  total: number;
+  status: string;
+  fulfilment: string;
+};
+
 const PurchaseOrderList = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
 
   // Load from localStorage or use defaults
-  const [orders, setOrders] = useState(() => {
+  const [orders, setOrders] = useState<PurchaseOrderRow[]>(() => {
     const saved = localStorage.getItem('TENGRY_PURCHASE_ORDERS');
-    return saved ? JSON.parse(saved) : [
+    return saved ? (JSON.parse(saved) as PurchaseOrderRow[]) : [
       { id: 'PO-SIM-01', number: 'PO-2024-09-001', vendor: 'Metal Sənaye (Bakı) MMC', date: '2024-09-25', total: 45600, status: 'APPROVED', fulfilment: 'PENDING' },
       { id: 'PO-SIM-02', number: 'PO-2024-09-002', vendor: 'Tekstil Dünyası Group', date: '2024-09-26', total: 12450, status: 'APPROVED', fulfilment: 'PENDING' },
       { id: '1', number: 'PO-2024-001', vendor: 'Azərsun Holdinq', date: '2024-04-20', total: 12500, status: 'APPROVED', fulfilment: 'PARTIAL' },

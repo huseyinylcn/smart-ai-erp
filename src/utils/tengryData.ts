@@ -8,11 +8,15 @@ export interface NomenclatureItem {
   sku: string;
   name: string;
   categoryId: string;
+  subCategoryId?: string;
   type: ItemType;
   unit: string;
   defaultPrice: number;
   costPrice?: number;
   bomId?: string;
+  costingMethod?: string;
+  currency?: string;
+  accounts?: { inventory: string; expense: string; revenue: string; vat: string };
 }
 
 export interface BOMComponent {
