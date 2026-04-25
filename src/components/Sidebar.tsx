@@ -34,7 +34,11 @@ const MenuItem = ({ item, isExpanded, onClick, showFull, isActive, isAltPressed,
   const hasSubMenu = item.subItems && item.subItems.length > 0;
   
   // Translation mapping logic
-  const translatedName = t(`nav.${item.name.toLowerCase().replace(/\s+/g, '_')}`) || item.name;
+  const getDisplayName = (name: string) => {
+    const key = `nav.${name.toLowerCase().replace(/\s+/g, '_')}`;
+    const translated = t(key);
+    return translated === key ? name : translated;
+  };
 
   if (hasSubMenu) {
     return (
@@ -50,7 +54,7 @@ const MenuItem = ({ item, isExpanded, onClick, showFull, isActive, isAltPressed,
         >
           <div className="flex items-center">
             {Icon && <Icon className={`w-[20px] h-[20px] ${showFull ? 'mr-3' : ''} stroke-[2.2px] ${isExpanded && showFull ? 'text-primary-600' : 'text-slate-400'}`} />}
-            {showFull && <span className="tracking-wide select-none truncate text-left">{t(`nav.${item.name.toLowerCase().replace(/\s+/g, '_')}`) || item.name}</span>}
+            {showFull && <span className="tracking-wide select-none truncate text-left">{getDisplayName(item.name)}</span>}
           </div>
           {showFull && (
             isExpanded ? <ChevronDown className="w-4 h-4 text-primary-400 shrink-0" /> : <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
@@ -86,7 +90,7 @@ const MenuItem = ({ item, isExpanded, onClick, showFull, isActive, isAltPressed,
                       }`
                     }
                   >
-                    {t(`nav.${sub.name.toLowerCase().replace(/\s+/g, '_')}`) || sub.name}
+                    {getDisplayName(sub.name)}
                     
                     {/* Sub-item KeyTip (Numeric/Letter Level 1) */}
                     {isAltPressed && navPath && currentPathIndices && 
@@ -123,7 +127,7 @@ const MenuItem = ({ item, isExpanded, onClick, showFull, isActive, isAltPressed,
         {Icon && (
           <Icon className={`w-[20px] h-[20px] ${showFull ? 'mr-3' : ''} stroke-[2.2px] ${isActive ? 'text-white' : 'text-slate-400'}`} />
         )}
-        {showFull && <span className="tracking-wide">{t(`nav.${item.name.toLowerCase().replace(/\s+/g, '_')}`) || item.name}</span>}
+        {showFull && <span className="tracking-wide">{getDisplayName(item.name)}</span>}
       </div>
       
       {/* Main Item KeyTip (Numeric) */}
@@ -154,7 +158,11 @@ const InnerMenuItem = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const Icon = item.icon;
   
-  const translatedName = t(`nav.${item.name.toLowerCase().replace(/\s+/g, '_')}`) || item.name;
+  const getDisplayName = (name: string) => {
+    const key = `nav.${name.toLowerCase().replace(/\s+/g, '_')}`;
+    const translated = t(key);
+    return translated === key ? name : translated;
+  };
 
   const currentKey = getHint(itemIndex);
   const fullPathToThis = [...currentPathIndices, currentKey];
@@ -178,7 +186,7 @@ const InnerMenuItem = ({
       >
         <div className="flex items-center">
           {Icon && <Icon className="w-3.5 h-3.5 mr-2 stroke-[2.2px]" />}
-          <span className="tracking-wide truncate text-[12px] text-slate-600 dark:text-slate-300">{t(`nav.${item.name.toLowerCase().replace(/\s+/g, '_')}`) || item.name}</span>
+          <span className="tracking-wide truncate text-[12px] text-slate-600 dark:text-slate-300">{getDisplayName(item.name)}</span>
         </div>
         {(isExpanded || shouldExpand) ? <ChevronDown className="w-3 h-3 text-primary-400" /> : <ChevronRight className="w-3 h-3" />}
         
@@ -215,7 +223,7 @@ const InnerMenuItem = ({
                       }`
                     }
                   >
-                    {t(`nav.${sub.name.toLowerCase().replace(/\s+/g, '_')}`) || sub.name}
+                    {getDisplayName(sub.name)}
                     
                     {/* Leaf Item KeyTip - show ONLY if path matches exactly */}
                     {isAltPressed && isExactParent && (
