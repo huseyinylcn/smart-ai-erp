@@ -4,7 +4,8 @@ import {
   Plus, Save, 
   Trash2, 
   ClipboardList,
-  Info, Building2, CreditCard, Calculator, Edit3, Search, Users, ChevronRight
+  Info, Building2, CreditCard, Calculator, Edit3, Search, Users, ChevronRight,
+  Printer, Paperclip, Upload, FileText, X
 } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import DocumentStatusProgress, { type DocumentStatus } from '../../components/DocumentStatusProgress';
@@ -23,11 +24,14 @@ const ContractCreate = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
+    name: '',
     voen: '',
     partnerName: '',
     partnerType: 'VENDOR', // VENDOR or CUSTOMER
-    date: '',
+    signingDate: '',
+    startDate: '',
     expiryDate: '',
+    autoRenew: false,
   });
 
   const [paymentTerms, setPaymentTerms] = useState({
@@ -37,6 +41,26 @@ const ContractCreate = () => {
     daysAfter: 0,
     dayType: 'TG'
   });
+  
+  const [attachments, setAttachments] = useState<any[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      const newFiles = Array.from(files).map(f => ({
+        id: Date.now() + Math.random(),
+        name: f.name,
+        size: (f.size / 1024).toFixed(1) + ' KB',
+        type: f.type
+      }));
+      setAttachments([...attachments, ...newFiles]);
+    }
+  };
+
+  const removeAttachment = (id: number) => {
+    setAttachments(attachments.filter(a => a.id !== id));
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -94,20 +118,28 @@ const ContractCreate = () => {
     if (isEdit) {
       // Mock fetch for edit mode
       setFormData({
+        name: 'Dəmir Məmulatlarının Alışı (Sentyabr)',
         voen: '1401234567',
         partnerName: 'Metal Sənaye (Bakı) MMC',
         partnerType: 'VENDOR',
-        date: '2024-09-15',
+        signingDate: '2024-09-10',
+        startDate: '2024-09-15',
         expiryDate: '2025-09-15',
+        autoRenew: true,
       });
+      setContractType('PURCHASE');
       setSearchTerm('Metal Sənaye (Bakı) MMC');
       setPaymentTerms({
         advance: 30,
-        beforeDelivery: 30,
-        afterDelivery: 40,
+        beforeDelivery: 20,
+        afterDelivery: 50,
         daysAfter: 15,
         dayType: 'TG'
       });
+      setAttachments([
+        { id: 1, name: 'signed_contract_scan.pdf', size: '1.2 MB', type: 'application/pdf' },
+        { id: 2, name: 'company_stamp.png', size: '450 KB', type: 'image/png' }
+      ]);
     }
   }, [isEdit, id]);
 
@@ -132,7 +164,7 @@ const ContractCreate = () => {
             <div>
                 <h1 className="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tight flex items-center italic">
                     {isEdit ? <Edit3 className="w-6 h-6 mr-2 text-indigo-500" /> : <FileSignature className="w-6 h-6 mr-2 text-primary-500" />}
-                    {isEdit ? 'Müqaviləni Redaktə Et' : 'Yeni Müqavilə və QRP'}
+                    {isEdit ? 'Müqaviləni Redaktə Et' : 'Yeni Müqavilə'}
                 </h1>
                 <div className="flex items-center space-x-3 mt-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest italic tracking-tighter">
                     <span>{isEdit ? `ID: ${id}` : 'SİSTEM TƏRƏFİNDƏN GENERASİYA OLUNACAQ'}</span>
@@ -140,10 +172,19 @@ const ContractCreate = () => {
             </div>
           </div>
 
-          <button className="flex items-center space-x-2 px-8 py-2.5 bg-primary-600 text-white rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-xl shadow-primary-500/20 active:scale-95 shadow-sm">
-              <Save className="w-4 h-4 mr-2" />
-              <span>{isEdit ? 'Müqaviləni Yenilə' : 'Müqaviləni Yadda Saxla'}</span>
-          </button>
+          <div className="flex items-center space-x-3">
+            <button 
+              onClick={() => window.print()}
+              className="flex items-center space-x-2 px-6 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-xl font-black text-xs uppercase tracking-widest transition-all hover:bg-slate-50 shadow-sm"
+            >
+                <Printer className="w-4 h-4 shadow-sm" />
+                <span className="hidden sm:inline">Çap et</span>
+            </button>
+            <button className="flex items-center space-x-2 px-8 py-2.5 bg-primary-600 text-white rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-xl shadow-primary-500/20 active:scale-95 shadow-sm">
+                <Save className="w-4 h-4 mr-2" />
+                <span>{isEdit ? 'Müqaviləni Yenilə' : 'Müqaviləni Yadda Saxla'}</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -158,6 +199,18 @@ const ContractCreate = () => {
                 <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center italic mb-4">
                     <Info className="w-4 h-4 mr-2" /> Əsas Hüquqi Məlumatlar
                 </h3>
+                <div className="grid grid-cols-1 gap-8">
+                    <div className="space-y-4">
+                        <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest italic ml-1">Müqavilənin Adı</label>
+                        <input 
+                            type="text" 
+                            value={formData.name} 
+                            onChange={(e) => setFormData({...formData, name: e.target.value})} 
+                            placeholder="Müqaviləyə qısa ad verin..." 
+                            className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl py-4 px-6 text-xs font-black italic shadow-inner outline-none shadow-sm"
+                        />
+                    </div>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-4">
                         <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest italic ml-1">Kontragent Növü</label>
@@ -258,15 +311,31 @@ const ContractCreate = () => {
                            </button>
                         </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="space-y-4">
-                            <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest italic ml-1">Müqavilə Tarixi</label>
-                            <input type="date" value={formData.date} onChange={(e) => setFormData({...formData, date: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl py-4 px-6 text-xs font-black italic shadow-inner outline-none" />
+                            <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest italic ml-1">Bağlanma Tarixi</label>
+                            <input type="date" value={formData.signingDate} onChange={(e) => setFormData({...formData, signingDate: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl py-4 px-6 text-xs font-black italic shadow-inner outline-none" />
+                        </div>
+                        <div className="space-y-4">
+                            <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest italic ml-1">Başlama Tarixi</label>
+                            <input type="date" value={formData.startDate} onChange={(e) => setFormData({...formData, startDate: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl py-4 px-6 text-xs font-black italic shadow-inner outline-none" />
                         </div>
                         <div className="space-y-4">
                             <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest italic ml-1">Bitmə Tarixi</label>
                             <input type="date" value={formData.expiryDate} onChange={(e) => setFormData({...formData, expiryDate: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl py-4 px-6 text-xs font-black italic shadow-inner outline-none" />
                         </div>
+                    </div>
+                    <div className="pt-2 flex items-center space-x-3">
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input 
+                                type="checkbox" 
+                                checked={formData.autoRenew} 
+                                onChange={(e) => setFormData({...formData, autoRenew: e.target.checked})}
+                                className="sr-only peer"
+                            />
+                            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600 shadow-sm"></div>
+                        </label>
+                        <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest italic">Xitam verilməzsə avtomatik uzadılır</span>
                     </div>
                 </div>
             </div>
@@ -356,6 +425,57 @@ const ContractCreate = () => {
                       <textarea className="w-full bg-white dark:bg-slate-900 border-none rounded-xl p-4 text-[11px] font-bold italic outline-none shadow-sm min-h-[100px]" placeholder="Məs: 50% avans, 50% təhvil-təslim aktından sonra..."></textarea>
                   </div>
                </div>
+            </div>
+
+            {/* ATTACHMENTS SECTION */}
+            <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 p-8 shadow-sm space-y-6">
+                <div className="flex items-center justify-between">
+                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center italic">
+                        <Paperclip className="w-4 h-4 mr-2 text-primary-500" /> Əlavə Olunmuş Sənədlər
+                    </h3>
+                    <button 
+                        onClick={() => fileInputRef.current?.click()}
+                        className="p-2 bg-primary-50 text-primary-600 rounded-lg hover:bg-primary-100 transition-all"
+                    >
+                        <Upload className="w-4 h-4" />
+                    </button>
+                    <input 
+                        type="file" 
+                        ref={fileInputRef} 
+                        onChange={handleFileUpload} 
+                        className="hidden" 
+                        multiple 
+                    />
+                </div>
+
+                <div className="space-y-3">
+                    {attachments.length > 0 ? (
+                        attachments.map(file => (
+                            <div key={file.id} className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl group animate-in fade-in zoom-in duration-300">
+                                <div className="flex items-center space-x-3 overflow-hidden">
+                                    <div className="p-2 bg-white dark:bg-slate-700 rounded-xl text-primary-500">
+                                        <FileText className="w-4 h-4" />
+                                    </div>
+                                    <div className="overflow-hidden">
+                                        <p className="text-[10px] font-black text-slate-700 dark:text-slate-200 truncate italic">{file.name}</p>
+                                        <p className="text-[8px] font-bold text-slate-400 uppercase italic">{file.size}</p>
+                                    </div>
+                                </div>
+                                <button 
+                                    onClick={() => removeAttachment(file.id)}
+                                    className="p-2 text-slate-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-all"
+                                >
+                                    <X className="w-4 h-4" />
+                                </button>
+                            </div>
+                        ))
+                    ) : (
+                        <div className="text-center py-8 border-2 border-dashed border-slate-100 dark:border-slate-800 rounded-3xl">
+                            <Paperclip className="w-8 h-8 text-slate-100 mx-auto mb-2" />
+                            <p className="text-[9px] font-black text-slate-300 uppercase italic">Sənəd yoxdur</p>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
       </div>

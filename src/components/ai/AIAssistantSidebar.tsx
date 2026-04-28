@@ -3,10 +3,12 @@ import {
   Sparkles, X, Send, Brain, 
   MessageSquare, Zap, Shield, 
   ChevronLeft, BarChart2, FileText, 
-  HelpCircle, Info, Database, Target
+  HelpCircle, Info, Database, Target,
+  RefreshCw
 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { processQuery } from '../../pages/ai/SAIAgentLogic';
+import AIPreviewComponent from './AIPreviewComponent';
 
 const AIAssistantSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,10 +17,12 @@ const AIAssistantSidebar = () => {
     content: string, 
     type?: string, 
     metadata?: any, 
-    extra?: any
+    extra?: any,
+    aiResponse?: any
   }[]>([
     { role: 'assistant', content: "Mən S-AI Assistant-am. Hazırda hansısa sualınız var?" }
   ]);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [input, setInput] = useState('');
   const location = useLocation();
 
@@ -39,29 +43,51 @@ const AIAssistantSidebar = () => {
 
     setMessages(prev => [...prev, { role: 'user', content: textToSend }]);
     setInput('');
+    setIsProcessing(true);
 
     try {
+      // SIMULATING v4 AI ORCHESTRATOR FLOW
+      // In a real app, this would be an API call to Node.js /api/ai/process
       const result = await processQuery(textToSend);
       
       let aiMessage: any;
 
-      if (result.error === 'CLARIFICATION_REQUIRED') {
+      if (textToSend.toLowerCase().includes('hesabat') || textToSend.toLowerCase().includes('report')) {
+        const aiResponse = {
+          intent: 'GENERATE_REPORT',
+          confidence: 0.95,
+          entities: {},
+          draft: {
+            version: 1,
+            basedOn: 'user_prompt',
+            data: { metrics: ['Gəlir', 'Xərc', 'Mənfəət'] }
+          },
+          ui: {
+            title: "Ağıllı Maliyyə Analizi",
+            description: "Son 3 ay üçün IFRS standartlı hesabat layihəsi.",
+            type: 'TABLE',
+            impact: 'MEDIUM'
+          },
+          action: { requiresApproval: true, impact: 'MEDIUM' }
+        };
+
+        aiMessage = {
+          role: 'assistant',
+          content: 'Sorğunuzu analiz etdim və müvafiq hesabat layihəsini hazırladım. Zəhmət olmasa aşağıda nəzərdən keçirin.',
+          type: 'text',
+          aiResponse
+        };
+      } else if (result.error === 'CLARIFICATION_REQUIRED') {
         aiMessage = {
           role: 'assistant',
           content: "Bu ay üzrə baxım, yoxsa başqa dövr (məs: Mart ayı) seçmək istəyirsiniz?",
           type: 'text'
         };
-      } else if (result.error === 'INTENT_NOT_FOUND') {
-        aiMessage = {
-          role: 'assistant',
-          content: `Kontekst: ${context.title}. Sizin "${textToSend}" sorğunuzu təhlil edirəm... Hazırda bu spesifik suala cavab vermək üçün data modelim təkmilləşdirilir.`,
-          type: 'text'
-        };
       } else {
         aiMessage = {
           role: 'assistant',
-          content: result.summary || '',
-          type: 'analysis',
+          content: result.summary || 'Sualınızı başa düşmədim, zəhmət olmasa dəqiqləşdirin.',
+          type: result.summary ? 'analysis' : 'text',
           metadata: result.metadata,
           extra: { 
             table: result.table,
@@ -76,7 +102,19 @@ const AIAssistantSidebar = () => {
         role: 'assistant', 
         content: "Xəta baş verdi. Zəhmət olmasa bir qədər sonra təkrar yoxlayın." 
       }]);
+    } finally {
+      setIsProcessing(false);
     }
+  };
+
+  const handleApproveAction = (draft: any) => {
+    // Simulate Business Validation + Execution Engine call
+    const successMessage: any = {
+      role: 'assistant',
+      content: '✅ Əməliyyat uğurla icra edildi. Hesabat "Maliyyə Mərkəzi" bölməsinə əlavə olundu.',
+      type: 'text'
+    };
+    setMessages(prev => [...prev, successMessage]);
   };
 
   return (
@@ -151,6 +189,16 @@ const AIAssistantSidebar = () => {
                                 <div className="space-y-3">
                                     <p>{msg.content}</p>
 
+                                    {msg.aiResponse && (
+                                      <div className="mt-4">
+                                        <AIPreviewComponent 
+                                          response={msg.aiResponse} 
+                                          onApprove={handleApproveAction}
+                                          onReject={() => {}} 
+                                        />
+                                      </div>
+                                    )}
+
                                     {msg.type === 'analysis' && msg.extra?.table && (
                                         <div className="mt-3 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
                                             <div className="overflow-x-auto max-w-full">
@@ -209,9 +257,10 @@ const AIAssistantSidebar = () => {
                     />
                     <button 
                       onClick={() => handleSend()}
-                      className="absolute right-2 top-2 bottom-2 px-4 bg-indigo-600 text-white rounded-xl shadow-lg hover:bg-indigo-700 transition-all active:scale-95 flex items-center justify-center font-black italic"
+                      disabled={isProcessing}
+                      className={`absolute right-2 top-2 bottom-2 px-4 ${isProcessing ? 'bg-slate-300' : 'bg-indigo-600 hover:bg-indigo-700'} text-white rounded-xl shadow-lg transition-all active:scale-95 flex items-center justify-center font-black italic`}
                     >
-                        <Send className="w-4 h-4" />
+                        {isProcessing ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                     </button>
                 </div>
                 <div className="flex items-center justify-center space-x-4 mt-4">

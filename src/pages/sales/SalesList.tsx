@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Plus, Search, Filter, FileText, 
   ChevronRight, MoreVertical, 
@@ -9,24 +9,48 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+import { salesApi } from '../../utils/api';
+import { useCompany } from '../../context/CompanyContext';
+
 const SalesList = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'DELIVERY' | 'INVOICE'>('DELIVERY');
+  const { activeCompany } = useCompany();
+  const [activeTab, setActiveTab] = useState<'DELIVERY' | 'INVOICE'>('INVOICE');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDocs, setSelectedDocs] = useState<string[]>([]);
+  const [invoices, setInvoices] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Mock Data for Deliveries (Waybills)
-  const deliveries = [
-    { id: 'D1', number: 'WAY-2024-001', customer: 'Azercell Telecom', date: '2024-04-20', warehouse: 'Bakı Mərkəz', status: 'SHIPPED', invoiceStatus: 'PARTIAL', items: 15 },
-    { id: 'D2', number: 'WAY-2024-002', customer: 'SOCAR', date: '2024-04-19', warehouse: 'Bakı Mərkəz', status: 'DELIVERED', invoiceStatus: 'NOT_INVOICED', items: 8 },
-    { id: 'D3', number: 'WAY-2024-003', customer: 'Pasha Bank', date: '2024-04-18', warehouse: 'Sumqayıt Filial', status: 'DELIVERED', invoiceStatus: 'INVOICED', items: 22 },
-  ];
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      if (!activeCompany) return;
+      try {
+        const result = await salesApi.getInvoices(activeCompany.id);
+        
+        const mapped = result.data.map((inv: any) => ({
+          id: inv.id,
+          number: inv.docNumber,
+          customer: inv.customer?.name || "Naməlum Müştəri",
+          date: new Date(inv.docDate).toISOString().split('T')[0],
+          total: inv.totalAmount,
+          status: inv.status === 'POSTED' ? 'PAID' : 'SENT',
+          ref: "-",
+          eInvNo: `E-INV-${inv.docNumber.split('-')[1]}`,
+          eInvDate: new Date(inv.docDate).toISOString().split('T')[0]
+        }));
+        
+        setInvoices(mapped);
+      } catch (error) {
+        console.error("Satışlar yüklənərkən xəta:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Mock Data for Invoices (Internal/Financial) + E-Invoice (Tax) info
-  const invoices = [
-    { id: 'I1', number: 'INV-2024-901', customer: 'Azercell Telecom', date: '2024-04-21', total: 4500, status: 'PAID', ref: 'WAY-2024-001', eInvNo: 'E-INV123456', eInvDate: '2024-04-22' },
-    { id: 'I2', number: 'INV-2024-902', customer: 'Pasha Bank', date: '2024-04-20', total: 12800, status: 'SENT', ref: 'WAY-2024-003', eInvNo: '', eInvDate: '' },
-  ];
+    fetchInvoices();
+  }, [activeCompany?.id]);
+
+  const deliveries: any[] = []; // Waybills could be fetched separately
 
   const toggleSelect = (id: string) => {
     setSelectedDocs(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);

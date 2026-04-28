@@ -36,6 +36,8 @@ const PurchaseInvoiceCreate = () => {
   const [currentStatus, setCurrentStatus] = useState<DocumentStatus>('DRAFT');
   const [docNumber, setDocNumber] = useState(`AQ-${new Date().getFullYear()}-0054`);
   const [docDate, setDocDate] = useState(new Date().toISOString().split('T')[0]);
+  const [taxDate, setTaxDate] = useState(new Date().toISOString().split('T')[0]); // VU
+  const [accountingDate, setAccountingDate] = useState(new Date().toISOString().split('T')[0]); // MU
   const [companyBranch, setCompanyBranch] = useState('Bakı Baş Ofis');
 
   // 2. SUPPLIER INFO
@@ -211,13 +213,21 @@ const PurchaseInvoiceCreate = () => {
                                     <option value="USD">USD</option>
                                 </select>
                             </div>
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tarix</label>
-                                <input type="date" value={docDate} onChange={(e) => setDocDate(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl py-2 px-3 text-xs font-bold" />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+                             <div className="space-y-2">
+                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Sənəd Tarixi</label>
+                                 <input type="date" value={docDate} onChange={(e) => setDocDate(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl py-2 px-3 text-xs font-bold" />
+                             </div>
+                         </div>
+ 
+                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+                              <div className="space-y-2">
+                                 <label className="text-[10px] font-black text-indigo-500 uppercase tracking-widest italic">Vergi Tarixi (VU)</label>
+                                 <input type="date" value={taxDate} onChange={(e) => setTaxDate(e.target.value)} className="w-full bg-indigo-50/50 dark:bg-indigo-900/10 border-none rounded-xl py-2 px-3 text-xs font-bold text-indigo-600 ring-1 ring-indigo-100" />
+                             </div>
+                             <div className="space-y-2">
+                                 <label className="text-[10px] font-black text-emerald-500 uppercase tracking-widest italic">Mühasibat Tarixi (MU)</label>
+                                 <input type="date" value={accountingDate} onChange={(e) => setAccountingDate(e.target.value)} className="w-full bg-emerald-50/50 dark:bg-emerald-900/10 border-none rounded-xl py-2 px-3 text-xs font-bold text-emerald-600 ring-1 ring-emerald-100" />
+                             </div>
                              <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Məzənnə</label>
                                 <input type="number" readOnly value="1.70" className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-xl py-2 px-3 text-xs font-bold text-slate-500" />
@@ -379,6 +389,32 @@ const PurchaseInvoiceCreate = () => {
                     </div>
                 </div>
                 <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-indigo-500/20 transition-all duration-700"></div>
+            </div>
+
+            {/* 3-WAY MATCH UI */}
+            <div className="bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm p-6 space-y-4">
+                <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-widest flex items-center italic">
+                    <Calculator className="w-3.5 h-3.5 mr-2 text-indigo-600" /> 3-Way Match Validasiyası
+                </h4>
+                <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 bg-emerald-50 dark:bg-emerald-900/10 rounded-xl">
+                        <div className="flex items-center space-x-2">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                            <span className="text-[9px] font-bold text-slate-600 uppercase">PO vs Invoice (Qiymət)</span>
+                        </div>
+                        <span className="text-[8px] font-black text-emerald-600 uppercase italic">MATCH</span>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-emerald-50 dark:bg-emerald-900/10 rounded-xl">
+                        <div className="flex items-center space-x-2">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                            <span className="text-[9px] font-bold text-slate-600 uppercase">GR vs Invoice (Miqdar)</span>
+                        </div>
+                        <span className="text-[8px] font-black text-emerald-600 uppercase italic">MATCH</span>
+                    </div>
+                    <div className="p-3 bg-indigo-600 text-white rounded-xl text-center shadow-lg shadow-indigo-200 cursor-pointer hover:scale-105 transition-all">
+                        <span className="text-[9px] font-black uppercase tracking-widest italic">Yoxlamanı Yenilə</span>
+                    </div>
+                </div>
             </div>
 
             {/* 6. VAT & Eligibility Section (Collapsible) */}

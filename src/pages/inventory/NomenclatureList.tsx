@@ -497,6 +497,7 @@ const NomenclatureList = () => {
                             <th className="px-8 py-6 w-32">Tip</th>
                             <th className="px-8 py-6">Alt Kateqoriya</th>
                             <th className="px-8 py-6 text-center">SKU / Kod</th>
+                            <th className="px-8 py-6 text-center">Ölçü</th>
                             <th className="px-8 py-6">Məhsul / Xidmət Adı</th>
                             <th className="px-8 py-6 text-center">Ölçü vahidi</th>
                             <th className="px-8 py-6 text-center">Həcm (m³)</th>
@@ -528,6 +529,9 @@ const NomenclatureList = () => {
                                         </td>
                                         <td className="px-8 py-6 text-center font-black italic text-slate-500 dark:text-slate-400 tabular-nums text-xs">
                                             {item.sku || item.code}
+                                        </td>
+                                        <td className="px-8 py-6 text-center">
+                                            <span className="text-[11px] font-black text-slate-500 dark:text-slate-400 italic tabular-nums uppercase">{item.size || '-'}</span>
                                         </td>
                                         <td className="px-8 py-6">
                                             <div className="flex flex-col">

@@ -30,34 +30,48 @@ type PurchaseInvoiceRow = {
   eInvDate: string;
 };
 
+import { purchaseApi } from '../../utils/api';
+import { useCompany } from '../../context/CompanyContext';
+import { useEffect } from 'react';
+
 const PurchaseInvoiceList = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'RECEIPT' | 'INVOICE'>('RECEIPT');
+  const { activeCompany } = useCompany();
+  const [activeTab, setActiveTab] = useState<'RECEIPT' | 'INVOICE'>('INVOICE');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDocs, setSelectedDocs] = useState<string[]>([]);
+  const [receipts, setReceipts] = useState<PurchaseReceiptRow[]>([]);
+  const [invoices, setInvoices] = useState<PurchaseInvoiceRow[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Load from localStorage or use defaults
-  const [receipts, setReceipts] = useState<PurchaseReceiptRow[]>(() => {
-    const saved = localStorage.getItem('TENGRY_PURCHASE_RECEIPTS');
-    return saved ? (JSON.parse(saved) as PurchaseReceiptRow[]) : [
-      { id: 'SIM_R_01', number: 'GRN-2024-10-01', vendor: 'Metal Sənaye (Bakı) MMC', date: '2024-10-01', warehouse: 'Əsas Anbar', status: 'COMPLETED', invoiceStatus: 'INVOICED' },
-      { id: 'SIM_R_02', number: 'GRN-2024-10-02', vendor: 'Tekstil Dünyası Group', date: '2024-10-02', warehouse: 'Əsas Anbar', status: 'COMPLETED', invoiceStatus: 'INVOICED' },
-      { id: 'SIM_R_03', number: 'GRN-2024-10-03', vendor: 'Kimya və Boya Logistika', date: '2024-10-03', warehouse: 'Əsas Anbar', status: 'COMPLETED', invoiceStatus: 'INVOICED' },
-      { id: 'R1', number: 'GRN-2024-001', vendor: 'Apple Inc.', date: '2024-04-20', warehouse: 'Bakı Mərkəz', status: 'COMPLETED', invoiceStatus: 'NOT_INVOICED' },
-      { id: 'R2', number: 'GRN-2024-002', vendor: 'Samsung Electronics', date: '2024-04-18', warehouse: 'Gəncə Filial', status: 'COMPLETED', invoiceStatus: 'INVOICED' },
-    ];
-  });
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!activeCompany) return;
+      try {
+        const result = await purchaseApi.getInvoices(activeCompany.id);
+        
+        const mapped = result.data.map((inv: any) => ({
+          id: inv.id,
+          number: inv.docNumber,
+          vendor: inv.supplier?.name || "Naməlum Təchizatçı",
+          date: new Date(inv.docDate).toISOString().split('T')[0],
+          total: inv.totalAmount,
+          status: inv.status === 'POSTED' ? 'COMPLETED' : 'APPROVED',
+          ref: "-",
+          eInvNo: `E-TAX-${inv.docNumber.split('-')[1]}`,
+          eInvDate: new Date(inv.docDate).toISOString().split('T')[0]
+        }));
+        
+        setInvoices(mapped);
+      } catch (error) {
+        console.error("Alışlar yüklənərkən xəta:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const [invoices, setInvoices] = useState<PurchaseInvoiceRow[]>(() => {
-    const saved = localStorage.getItem('TENGRY_PURCHASE_INVOICES');
-    return saved ? (JSON.parse(saved) as PurchaseInvoiceRow[]) : [
-      { id: 'SIM_I_01', number: 'PINV-2024-10-01', vendor: 'Metal Sənaye (Bakı) MMC', date: '2024-10-01', total: 45600, status: 'COMPLETED', ref: 'PO-SIM-01', eInvNo: 'E-TAX-1001', eInvDate: '2024-10-01' },
-      { id: 'SIM_I_02', number: 'PINV-2024-10-02', vendor: 'Tekstil Dünyası Group', date: '2024-10-02', total: 12450, status: 'COMPLETED', ref: 'PO-SIM-02', eInvNo: '', eInvDate: '' },
-      { id: 'SIM_I_03', number: 'PINV-2024-10-03', vendor: 'Kimya və Boya Logistika', date: '2024-10-03', total: 8900, status: 'COMPLETED', ref: 'PO-SIM-03', eInvNo: 'E-TAX-1003', eInvDate: '2024-10-03' },
-      { id: 'I1', number: 'PINV-2024-501', vendor: 'Samsung Electronics', date: '2024-04-19', total: 8200, status: 'COMPLETED', ref: 'GRN-2024-002', eInvNo: 'E-TAX-998877', eInvDate: '2024-04-19' },
-      { id: 'I2', number: 'PINV-2024-502', vendor: 'Dell Technologies', date: '2024-04-15', total: 12600, status: 'APPROVED', ref: 'GRN-2024-005', eInvNo: '', eInvDate: '' },
-    ];
-  });
+    fetchData();
+  }, [activeCompany?.id]);
 
   const toggleSelect = (id: string) => {
     setSelectedDocs(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);

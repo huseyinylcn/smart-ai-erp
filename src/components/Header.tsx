@@ -9,6 +9,7 @@ import ProfileDropdown from './ProfileDropdown';
 import AddNewDropdown from './AddNewDropdown';
 
 import { useCompany } from '../context/CompanyContext';
+import { useAuth } from '../context/AuthContext';
 
 import { useLocalization } from '../context/LocalizationContext';
 import type { Language } from '../utils/LocalizationEngine';
@@ -36,6 +37,7 @@ import type { Language } from '../utils/LocalizationEngine';
   }) => {
   const navigate = useNavigate();
   const { activeCompany, companies, setActiveCompany, isLoading } = useCompany();
+  const { user, logout } = useAuth();
   const { language, setLanguage, t } = useLocalization();
   const [showCompanyMenu, setShowCompanyMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -329,8 +331,12 @@ import type { Language } from '../utils/LocalizationEngine';
               <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full"></div>
             </div>
             <div className="hidden lg:flex flex-col text-left">
-              <span className="text-[13px] font-black text-slate-800 dark:text-slate-200 leading-tight">Ali Əliyev</span>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Admin</span>
+              <span className="text-[13px] font-black text-slate-800 dark:text-slate-200 leading-tight">
+                {user?.username === 'admin' ? 'Administrator' : user?.username || 'İstifadəçi'}
+              </span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+                {user?.username === 'admin' ? 'Admin' : 'User'}
+              </span>
             </div>
             <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${showProfile ? 'rotate-180' : ''}`} />
             
@@ -343,7 +349,7 @@ import type { Language } from '../utils/LocalizationEngine';
           <ProfileDropdown 
             isOpen={showProfile} 
             onClose={() => setShowProfile(false)} 
-            onLogout={() => console.log('Logout')} 
+            onLogout={logout} 
           />
         </div>
       </div>

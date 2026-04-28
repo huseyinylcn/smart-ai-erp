@@ -31,8 +31,21 @@ const QuotationComparison = () => {
   const handleApprove = () => {
     const selected = quotations.find(q => q.selected);
     if (selected) {
+      // Map comparison items to PO items
+      const poItems = items.map(it => {
+        const vendorPrice = selected.items.find(si => si.id === it.id)?.price || 0;
+        return {
+          id: it.id.toString(),
+          name: it.name,
+          sku: `SKU-${it.id}`,
+          qty: it.quantity,
+          expectedPrice: vendorPrice,
+          taxRate: 18
+        };
+      });
+
       alert(`${selected.vendor} təklifi təsdiq edildi! Satınalma Sifarişi yaradılır.`);
-      navigate('/purchase/orders');
+      navigate('/purchase/order/create', { state: { vendor: selected.vendor, items: poItems } });
     } else {
       alert("Zəhmət olmasa, təsdiq üçün bir təklif seçin.");
     }

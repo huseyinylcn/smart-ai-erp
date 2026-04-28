@@ -31,7 +31,7 @@ export const menuConfig: SidebarItem[] = [
     ]
   },
   {
-    name: 'ERP Admin Panel Bölməsi', icon: Settings, keyHint: 'M',
+    name: 'ERP Admin Panel', icon: Settings, keyHint: 'M',
     subItems: [
       { name: 'Aİ İnkişaf Köməkçisi', path: '/ai/dev-assistant', keyHint: 'D' },
       { name: 'Aİ Şablon Qurucu', path: '/ai/template-builder', keyHint: 'T' },
@@ -114,12 +114,13 @@ export const menuConfig: SidebarItem[] = [
     name: 'Təchizat və Daşıma', icon: Truck, keyHint: 'T',
     subItems: [
       { name: 'Təchizatçı Reyestri', path: '/purchase/vendors', keyHint: 'T' },
+      { name: 'İlkin Tələblər (Internal)', path: '/purchase/requests', keyHint: 'I' },
+      { name: 'Satınalma Sorğuları (PR)', path: '/purchase/requisitions', keyHint: 'O' },
+      { name: 'Qiymət Təklifləri (RFQ)', path: '/purchase/rfq', keyHint: 'Q' },
       { name: 'Satınalma Sifarişləri', path: '/purchase/orders', keyHint: 'S' },
       { name: 'Alış Reyestri və Qaimələr', path: '/purchase/invoice/list', keyHint: 'A' },
       { name: 'Alışdan Geri Qaytarmalar', path: '/purchase/return/invoice/list', keyHint: 'G' },
-      { name: 'Satınalma Sorğuları', path: '/purchase/requisitions/create', keyHint: 'O' },
-      { name: 'Qiymət Təklifləri (RFQ)', path: '/purchase/rfq/create', keyHint: 'Q' },
-      { name: 'Maya Dəyəri Əlavələri', path: '/purchase/landed-cost/create', keyHint: 'D' }
+      { name: 'Maya Dəyəri Əlavələri', path: '/purchase/landed-cost', keyHint: 'D' }
     ]
   },
   { 
@@ -172,16 +173,11 @@ export const menuConfig: SidebarItem[] = [
   { 
     name: 'Xəzinə', icon: Landmark, keyHint: 'X',
     subItems: [
-      { name: 'Bank Hesabları', path: '/bank/registry', keyHint: 'B' },
-      { name: 'Kassa', path: '/bank/cash', keyHint: 'K' },
-      { name: 'Depozit Hesabları', path: '/bank/deposits', keyHint: 'D' },
+      { name: 'Xəzinə Hesabları', path: '/bank/registry', keyHint: 'H' },
+      { name: 'Məzənnə', path: '/finance/currencies', keyHint: 'M' },
       { name: 'Pul Hərəkətləri', path: '/bank/transactions', keyHint: 'P' },
-      { name: 'Köçürmə və Transferlər', path: '/bank/transfers', keyHint: 'T' },
-      { name: 'Valyutalar', path: '/finance/currencies', keyHint: 'V' },
-      { name: 'Valyuta Konvertasiyası', path: '/finance/currency-conversion', keyHint: 'C' },
-      { name: 'Valyuta Mübadiləsi (Alış-Satış)', path: '/bank/exchange', keyHint: 'M' },
       { name: 'Qalıqlar və Dövriyyələr', path: '/bank/reports', keyHint: 'Q' },
-      { name: 'Tənzimləmələr', path: '/bank/settings', keyHint: 'T' }
+      { name: 'Tənzimləmələr', path: '/bank/settings', keyHint: 'Z' }
     ]
   },
   { name: 'Xərclər', icon: CircleDollarSign, path: '/finance/expenses', keyHint: 'E' },
@@ -246,7 +242,7 @@ export const menuConfig: SidebarItem[] = [
     ]
   },
 
-  { isHeader: true, name: 'Vəsaitlər və Hüquq', keyHint: 'V' },
+  { isHeader: true, name: 'Vəsaitlər', keyHint: 'V' },
   { 
     name: 'Əsas Vəsaitlər', icon: Box, keyHint: 'B',
     subItems: [
@@ -270,7 +266,7 @@ export const menuConfig: SidebarItem[] = [
   { 
     name: 'İstifadəçilər', icon: Shield, keyHint: 'U',
     subItems: [
-      { name: 'İstifadəçi siyahısı', path: '/users', keyHint: 'S' },
+      { name: 'İşçilər siyahısı', path: '/users', keyHint: 'S' },
       { name: 'Rollar və Səlahiyyətlər', path: '/roles-permissions', keyHint: 'R' }
     ]
   },

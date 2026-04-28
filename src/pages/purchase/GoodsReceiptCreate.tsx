@@ -166,11 +166,21 @@ const GoodsReceiptCreate = () => {
                         <label className="text-[10px] font-black text-emerald-600 uppercase tracking-widest flex items-center">
                             <FileText className="w-3.5 h-3.5 mr-2" /> Bağlı Alış Sənədi
                         </label>
-                        <select value={linkedPurchaseId} onChange={(e) => setLinkedPurchaseId(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl py-3 px-4 text-xs font-bold outline-none focus:ring-2 focus:ring-emerald-500/20">
-                            <option value="">Sənəd Seçin...</option>
-                            <option value="PUR-101">ALI-2024-812 (Microsoft)</option>
-                            <option value="PUR-102">ALI-2024-754 (HP Global)</option>
-                        </select>
+                        <div className="flex items-center space-x-2">
+                            <select value={linkedPurchaseId} onChange={(e) => setLinkedPurchaseId(e.target.value)} className="flex-1 bg-slate-50 dark:bg-slate-800 border-none rounded-xl py-3 px-4 text-xs font-bold outline-none focus:ring-2 focus:ring-emerald-500/20">
+                                <option value="">Sənəd Seçin...</option>
+                                <option value="PUR-101">ALI-2024-812 (Microsoft)</option>
+                                <option value="PUR-102">ALI-2024-754 (HP Global)</option>
+                            </select>
+                            <button 
+                                onClick={() => {
+                                    if(linkedPurchaseId) alert("Sifariş məlumatları uğurla çəkildi!");
+                                }}
+                                className="px-4 py-3 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-600 hover:text-white transition-all border border-emerald-100 dark:border-emerald-800"
+                            >
+                                Çək
+                            </button>
+                        </div>
                     </div>
 
                     <div className="space-y-4">
@@ -222,6 +232,7 @@ const GoodsReceiptCreate = () => {
                                 <th className="px-6 py-5">Məhsul</th>
                                 <th className="px-4 py-5 text-center">Gözlənilən</th>
                                 <th className="px-4 py-5 text-center">Əvvəl Qəbul</th>
+                                <th className="px-4 py-5 text-center text-rose-500">Qalıq (Backorder)</th>
                                 <th className="px-4 py-5 text-center text-emerald-600">Cari Qəbul</th>
                                 <th className="px-4 py-5">
                                     <div className="flex items-center"><Tags className="w-3 h-3 mr-1" /> Partiya (Batch)</div>
@@ -246,6 +257,9 @@ const GoodsReceiptCreate = () => {
                                         </td>
                                         <td className="px-4 py-5 text-center text-slate-500 font-mono italic">{item.expectedQty}</td>
                                         <td className="px-4 py-5 text-center text-amber-500 font-mono italic border-l border-slate-50 dark:border-slate-800">{item.prevReceived}</td>
+                                        <td className="px-4 py-5 text-center text-rose-500 font-mono italic border-l border-slate-50 dark:border-slate-800">
+                                            {Math.max(0, remaining - item.currentQty)}
+                                        </td>
                                         <td className="px-4 py-5 text-center border-l border-slate-50 dark:border-slate-800">
                                             <div className="flex flex-col items-center space-y-1">
                                                 <input 

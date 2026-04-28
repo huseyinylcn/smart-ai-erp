@@ -7,6 +7,8 @@ import { useOutletContext, useNavigate, useLocation } from 'react-router-dom';
 import { menuConfig } from '../config/menu';
 import type { SidebarItem } from '../config/menu';
 import { useLocalization } from '../context/LocalizationContext';
+import { useAuth } from '../context/AuthContext';
+import { LogOut } from 'lucide-react';
 
 const getHint = (index: number) => {
   if (index < 9) return String(index + 1);
@@ -257,6 +259,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar, isAltPressed, navPath, setNavPath
   const location = useLocation();
   const [expandedMenu, setExpandedMenu] = useState<string | null>('Dashboard');
   const [isHovered, setIsHovered] = useState(false);
+  const { logout } = useAuth();
 
   // The sidebar is 'mini' if collapsed AND not hovered.
   // It is 'full' if NOT collapsed OR hovered while collapsed.
@@ -424,11 +427,6 @@ const Sidebar = ({ isCollapsed, toggleSidebar, isAltPressed, navPath, setNavPath
           })}
         </nav>
 
-        {!showFullSidebar && (
-           <div className="mt-auto flex justify-center pb-8 group cursor-pointer" title="Dashboard">
-              <LayoutDashboard className="w-5 h-5 text-slate-400 hover:text-indigo-500 transition-colors" />
-           </div>
-        )}
       </div>
     </div>
   );

@@ -21,7 +21,7 @@ const PriceAgreementDetail = () => {
     items: [
       { id: 1, name: 'Profil 40x40', unit: 'metr', price: 4.5, quantity: 500, used: 120 },
       { id: 2, name: 'Boya (Qara)', unit: 'kq', price: 12, quantity: 100, used: 45 },
-      { id: 3, name: 'Elektrod 3.2mm', unit: 'paçka', price: 8.5, quantity: 50, used: 10 },
+      { id: 3, name: 'Elektrod 3.2mm', unit: 'paçka', price: 8.5, quantity: null, used: 10 },
     ]
   });
 
@@ -104,7 +104,8 @@ const PriceAgreementDetail = () => {
                        <th className="py-4 text-[10px] font-black text-slate-400 uppercase italic">Məhsul</th>
                        <th className="py-4 text-[10px] font-black text-slate-400 uppercase italic text-center">Vahid</th>
                        <th className="py-4 text-[10px] font-black text-slate-400 uppercase italic text-right">Qiymət (₼)</th>
-                       <th className="py-4 text-[10px] font-black text-slate-400 uppercase italic text-right">Maks. Miqdar</th>
+                       <th className="py-4 text-[10px] font-black text-slate-400 uppercase italic text-right">Miqdar</th>
+                       <th className="py-4 text-[10px] font-black text-slate-400 uppercase italic text-right">Məbləğ</th>
                        <th className="py-4 text-[10px] font-black text-slate-400 uppercase italic text-right">İstifadə</th>
                     </tr>
                  </thead>
@@ -114,16 +115,23 @@ const PriceAgreementDetail = () => {
                          <td className="py-5 text-xs font-black text-slate-800 dark:text-white italic">{item.name}</td>
                          <td className="py-5 text-center text-[10px] font-bold text-slate-400 italic uppercase">{item.unit}</td>
                          <td className="py-5 text-right text-xs font-black italic tabular-nums text-primary-600">₼ {item.price.toFixed(2)}</td>
-                         <td className="py-5 text-right text-xs font-black italic tabular-nums text-slate-700 dark:text-slate-200">{item.quantity}</td>
+                         <td className="py-5 text-right text-xs font-black italic tabular-nums text-slate-700 dark:text-slate-200">
+                            {item.quantity ? item.quantity.toLocaleString() : 'Limitsiz'}
+                         </td>
+                         <td className="py-5 text-right text-xs font-black italic tabular-nums text-indigo-600">
+                            {item.quantity ? `₼ ${(item.price * item.quantity).toLocaleString()}` : '-'}
+                         </td>
                          <td className="py-5 text-right shadow-sm">
                             <div className="flex flex-col items-end space-y-1 shadow-sm">
                                <div className="w-24 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden shadow-inner">
                                   <div 
-                                    className={`h-full rounded-full ${item.used / item.quantity > 0.8 ? 'bg-rose-500' : 'bg-emerald-500'}`}
-                                    style={{ width: `${(item.used / item.quantity) * 100}%` }}
+                                    className={`h-full rounded-full ${item.quantity ? (item.used / item.quantity > 0.8 ? 'bg-rose-500' : 'bg-emerald-500') : 'bg-indigo-500'}`}
+                                    style={{ width: item.quantity ? `${(item.used / item.quantity) * 100}%` : '100%' }}
                                   />
                                </div>
-                               <span className="text-[9px] font-black italic text-slate-400 tabular-nums uppercase">{item.used} / {item.quantity} {item.unit}</span>
+                               <span className="text-[9px] font-black italic text-slate-400 tabular-nums uppercase">
+                                  {item.used} / {item.quantity || '∞'} {item.unit}
+                               </span>
                             </div>
                          </td>
                       </tr>

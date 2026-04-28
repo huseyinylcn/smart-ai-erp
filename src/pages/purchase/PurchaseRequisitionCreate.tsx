@@ -20,6 +20,8 @@ const PurchaseRequisitionCreate = () => {
     { id: 1, name: '', quantity: 1, unit: 'ədəd', notes: '' }
   ]);
   const [notes, setNotes] = useState('');
+  const [requiredDate, setRequiredDate] = useState('');
+  const [budgetLink, setBudgetLink] = useState('');
 
   const addItem = () => {
     setItems([...items, { id: Date.now(), name: '', quantity: 1, unit: 'ədəd', notes: '' }]);
@@ -33,7 +35,7 @@ const PurchaseRequisitionCreate = () => {
 
   const handleSave = () => {
     alert("Satınalma Sorğusu uğurla yaradıldı!");
-    navigate('/purchase/orders'); // Placeholder navigation
+    navigate('/purchase/requisitions');
   };
 
   return (
@@ -130,6 +132,34 @@ const PurchaseRequisitionCreate = () => {
                     placeholder="Ad, Soyad"
                     value={requester} 
                     onChange={(e) => setRequester(e.target.value)}
+                    className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl py-4 pl-12 pr-5 text-sm font-black italic shadow-inner outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-8 mb-10">
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic ml-1">Tələb olunan tarix</label>
+                <div className="relative">
+                  <Calendar className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-500" />
+                  <input 
+                    type="date" 
+                    value={requiredDate} 
+                    onChange={(e) => setRequiredDate(e.target.value)}
+                    className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl py-4 pl-12 pr-5 text-sm font-black italic shadow-inner outline-none ring-1 ring-amber-100 dark:ring-amber-900/30"
+                  />
+                </div>
+              </div>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic ml-1">Büdcə Referansı (Opsional)</label>
+                <div className="relative">
+                  <FileText className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
+                  <input 
+                    type="text" 
+                    placeholder="Məs: B-2024-CAPEX-01"
+                    value={budgetLink} 
+                    onChange={(e) => setBudgetLink(e.target.value)}
                     className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl py-4 pl-12 pr-5 text-sm font-black italic shadow-inner outline-none"
                   />
                 </div>
@@ -238,6 +268,13 @@ const PurchaseRequisitionCreate = () => {
                 <p className="text-[9px] font-bold text-slate-400 text-center italic px-4">
                   Bu sorğu təsdiq edildikdən sonra RFQ (Qiymət Təklifi Sorğusu) mərhələsinə keçəcəkdir.
                 </p>
+                <button 
+                  onClick={() => navigate('/purchase/rfq/create', { state: { prId: docNumber, items } })}
+                  className="w-full flex items-center justify-center space-x-2 py-3 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition-all border border-indigo-100 dark:border-indigo-800"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>RFQ-ya Çevir</span>
+                </button>
              </div>
            </div>
         </div>

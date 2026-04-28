@@ -47,17 +47,19 @@ export const CompanyProvider = ({ children }: { children: ReactNode }) => {
         isAccountPlanLocked: c.isAccountPlanLocked || false
       }));
 
-      // FALLBACK: If no companies from API or error, ensure TENGRY SUPPLY exists with REAL DB ID
-      if (fetchedCompanies.length === 0) {
-        fetchedCompanies = [{
-          id: 'ae1dd922-4d6e-401f-95ed-cfa89ea84df4',
+      // ALWAYS ensure TENGRY SUPPLY exists in the list for development/demo stability
+      const tengryId = 'ae1dd922-4d6e-401f-95ed-cfa89ea84df4';
+      const hasTengry = fetchedCompanies.some((c: Company) => c.id === tengryId);
+      if (!hasTengry) {
+        fetchedCompanies.push({
+          id: tengryId,
           code: 'TENGRY',
           name: 'TENGRY SUPPLY',
           taxId: '1234567890',
           logo: 'TE',
           settings: {},
           isAccountPlanLocked: false
-        }];
+        });
       }
       
       setCompanies(fetchedCompanies);

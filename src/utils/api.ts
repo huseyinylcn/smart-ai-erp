@@ -1,4 +1,4 @@
-const BASE_URL = 'http://127.0.0.1:4000/api/v1';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api/v1';
 
 export const apiFetch = async (endpoint: string, options: RequestInit = {}, companyId?: string) => {
   const controller = new AbortController();
@@ -44,8 +44,9 @@ export const financeApi = {
   getTransactionDetail: (id: string, companyId: string) => {
     return apiFetch(`/finance/transactions/${id}`, {}, companyId);
   },
-  getAccounts: (companyId: string) => {
-    return apiFetch(`/finance/accounts`, {}, companyId);
+  getAccounts: (companyId: string, params: any = {}) => {
+    const query = new URLSearchParams(params).toString();
+    return apiFetch(`/finance/accounts?${query}`, {}, companyId);
   },
   createAccount: (data: any, companyId: string) => {
     return apiFetch(`/finance/accounts`, { method: 'POST', body: JSON.stringify(data) }, companyId);
@@ -61,6 +62,46 @@ export const financeApi = {
   },
   createTransaction: (data: any, companyId: string) => {
     return apiFetch(`/finance/transactions`, { method: 'POST', body: JSON.stringify(data) }, companyId);
+  },
+  getExchangeRates: (companyId: string, params: any = {}) => {
+    const query = new URLSearchParams(params).toString();
+    return apiFetch(`/finance/exchange-rates?${query}`, {}, companyId);
+  },
+  syncExchangeRates: (companyId: string, date?: string) => {
+    return apiFetch(`/finance/exchange-rates/sync`, { method: 'POST', body: JSON.stringify({ date }) }, companyId);
+  },
+  createManualRate: (data: any, companyId: string) => {
+    return apiFetch(`/finance/exchange-rates/manual`, { method: 'POST', body: JSON.stringify(data) }, companyId);
+  },
+  toggleRateLock: (id: string, isLocked: boolean, companyId: string) => {
+    return apiFetch(`/finance/exchange-rates/${id}/lock`, { method: 'PATCH', body: JSON.stringify({ isLocked }) }, companyId);
+  },
+  bulkLockRates: (ids: string[], isLocked: boolean, companyId: string) => {
+    return apiFetch(`/finance/exchange-rates/bulk-lock`, { method: 'PATCH', body: JSON.stringify({ ids, isLocked }) }, companyId);
+  },
+  getCurrencies: (companyId: string) => {
+    return apiFetch(`/finance/currencies`, {}, companyId);
+  },
+  createCurrency: (data: any, companyId: string) => {
+    return apiFetch(`/finance/currencies`, { method: 'POST', body: JSON.stringify(data) }, companyId);
+  },
+  updateCurrency: (id: string, data: any, companyId: string) => {
+    return apiFetch(`/finance/currencies/${id}`, { method: 'PATCH', body: JSON.stringify(data) }, companyId);
+  },
+  deleteCurrency: (id: string, companyId: string) => {
+    return apiFetch(`/finance/currencies/${id}`, { method: 'DELETE' }, companyId);
+  },
+  getTreasuryCategories: (companyId: string) => {
+    return apiFetch(`/finance/treasury-categories`, {}, companyId);
+  },
+  createTreasuryCategory: (data: any, companyId: string) => {
+    return apiFetch(`/finance/treasury-categories`, { method: 'POST', body: JSON.stringify(data) }, companyId);
+  },
+  updateTreasuryCategory: (id: string, data: any, companyId: string) => {
+    return apiFetch(`/finance/treasury-categories/${id}`, { method: 'PATCH', body: JSON.stringify(data) }, companyId);
+  },
+  deleteTreasuryCategory: (id: string, companyId: string) => {
+    return apiFetch(`/finance/treasury-categories/${id}`, { method: 'DELETE' }, companyId);
   }
 };
 
@@ -96,6 +137,16 @@ export const crmApi = {
   }) => apiFetch('/crm/counterparties', { method: 'POST', body: JSON.stringify(data) }),
   updateCounterparty: (id: string, data: any) => apiFetch(`/crm/counterparties/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
   deleteCounterparty: (id: string) => apiFetch(`/crm/counterparties/${id}`, { method: 'DELETE' }),
+};
+
+export const salesApi = {
+  getInvoices: (companyId: string) => apiFetch(`/sales/invoices?companyId=${companyId}`, {}, companyId),
+  getOrders: (companyId: string) => apiFetch(`/sales/orders?companyId=${companyId}`, {}, companyId),
+};
+
+export const purchaseApi = {
+  getInvoices: (companyId: string) => apiFetch(`/inventory/purchase-invoices?companyId=${companyId}`, {}, companyId),
+  getOrders: (companyId: string) => apiFetch(`/inventory/purchase-orders?companyId=${companyId}`, {}, companyId),
 };
 
 export const hrApi = {
@@ -340,50 +391,10 @@ export const hrApi = {
 import { TENGRY_NOMENCLATURE, TENGRY_CATEGORIES } from './tengryData';
 
 export const inventoryApi = {
-  getCategories: async (companyId: string) => {
-    // Forcing Tengry Data for the demonstration
-    console.warn('Forcing Tengry Categories');
-    return TENGRY_CATEGORIES;
-  },
-  // ... other methods ...
-  getItems: async (params: { companyId: string, categoryId?: string, subCategoryId?: string, type?: string }) => {
-    // Forcing Tengry Data for the demonstration
-    console.warn('Forcing Tengry Nomenclataura');
-    
-    // Map Tengry items to the format expected by the frontend (enriched with objects)
-    const allData = TENGRY_NOMENCLATURE.map(item => {
-      const cat = TENGRY_CATEGORIES.find(c => c.id === item.categoryId);
-      const subCat = cat?.subCategories?.find((s: any) => s.id === item.subCategoryId);
-      
-      return {
-        ...item,
-        uom: item.unit,
-        isStockItem: item.type !== 'SERVICE' && item.type !== 'WORK',
-        subCategory: subCat ? {
-          id: subCat.id,
-          name: subCat.name,
-          categoryId: cat?.id,
-          category: { 
-            id: cat?.id,
-            name: cat?.name 
-          }
-        } : {
-          name: '-',
-          category: { name: cat?.name || 'Kateqoriyasız' }
-        }
-      };
-    });
-
-    // Client-side filtering for the demonstration
-    let filteredData = allData;
-    if (params.categoryId) {
-      filteredData = filteredData.filter(i => i.categoryId === params.categoryId);
-    }
-    if (params.subCategoryId) {
-      filteredData = filteredData.filter(i => i.subCategoryId === params.subCategoryId);
-    }
-
-    return { data: filteredData };
+  getCategories: (companyId: string) => apiFetch(`/inventory/categories`, {}, companyId),
+  getItems: (params: { companyId: string, categoryId?: string, subCategoryId?: string, type?: string }) => {
+    const query = new URLSearchParams(params as any).toString();
+    return apiFetch(`/inventory/items?${query}`, {}, params.companyId);
   },
   createItem: (data: any, companyId: string) => {
     return apiFetch(`/inventory/items`, { method: 'POST', body: JSON.stringify(data) }, companyId);
@@ -420,4 +431,11 @@ export const inventoryApi = {
     console.warn('[inventoryApi] deleteSubCategory: demo — no persistence');
     return { ok: true as const };
   },
+};
+
+export const authApi = {
+  login: (data: any) => apiFetch('/auth/login', { method: 'POST', body: JSON.stringify(data) }),
+  registerCompany: (data: any) => apiFetch('/auth/register-company', { method: 'POST', body: JSON.stringify(data) }),
+  inviteUser: (data: any, companyId: string) => apiFetch('/auth/invite-user', { method: 'POST', body: JSON.stringify(data) }, companyId),
+  setPassword: (data: any) => apiFetch('/auth/set-password', { method: 'POST', body: JSON.stringify(data) }),
 };

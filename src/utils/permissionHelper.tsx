@@ -40,6 +40,14 @@ export const hasPermission = (module: string | ERPModule, action: keyof ModulePe
 };
 
 /**
+ * Checks if financial data (prices, amounts) should be hidden for the current user.
+ * Role: Warehouse manager/worker should NOT see prices.
+ */
+export const shouldHidePrices = (): boolean => {
+  return mockUser.role === 'Warehouse Manager' || mockUser.role === 'Warehouse Worker';
+};
+
+/**
  * Returns a standardized warning component for restricted access.
  */
 export const PermissionDeniedBanner = ({ moduleName }: { moduleName: string }) => {

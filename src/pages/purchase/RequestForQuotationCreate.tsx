@@ -7,7 +7,8 @@ import {
   MessageSquare,
   FileText,
   Clock,
-  ShieldCheck
+  ShieldCheck,
+  LayoutList
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -77,7 +78,7 @@ const RequestForQuotationCreate = () => {
         {/* INFO SECTION */}
         <div className="lg:col-span-2 space-y-8">
           <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 p-10 shadow-sm">
-            <div className="grid grid-cols-2 gap-8 mb-10">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
               <div className="space-y-3">
                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic ml-1">RFQ Nömrəsi</label>
                 <div className="relative">
@@ -88,6 +89,27 @@ const RequestForQuotationCreate = () => {
                     readOnly
                     className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl py-4 pl-12 pr-5 text-sm font-black italic shadow-inner outline-none"
                   />
+                </div>
+              </div>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-orange-600 uppercase tracking-widest italic ml-1">Satınalma Sorğusu (PR)</label>
+                <div className="relative">
+                  <LayoutList className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-orange-400" />
+                  <select 
+                    className="w-full bg-orange-50/30 dark:bg-orange-900/10 border border-orange-100 dark:border-orange-800 rounded-2xl py-4 pl-12 pr-5 text-sm font-black italic shadow-inner outline-none appearance-none cursor-pointer"
+                    onChange={(e) => {
+                      if(e.target.value) {
+                        setItems([
+                          { id: 1, name: 'Server Rack 42U Cabinet', quantity: 2, unit: 'ədəd', lastPrice: '1200.00' },
+                          { id: 2, name: 'Cisco Core Switch L3', quantity: 1, unit: 'ədəd', lastPrice: '3400.00' }
+                        ]);
+                      }
+                    }}
+                  >
+                    <option value="">Sorğu Seçin (PR)...</option>
+                    <option value="PR-2024-001">PR-2024-001 (İT Malları)</option>
+                    <option value="PR-2024-002">PR-2024-002 (Ofis Ləvazimatı)</option>
+                  </select>
                 </div>
               </div>
               <div className="space-y-3">

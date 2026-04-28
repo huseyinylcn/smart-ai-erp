@@ -1,8 +1,9 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import SalesInvoiceCreate from './pages/sales/SalesInvoiceCreate';
 import { CompanyProvider } from './context/CompanyContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import Inventory from './pages/Inventory';
 import Payroll from './pages/Payroll';
 import Finance from './pages/Finance';
@@ -32,6 +33,7 @@ import CashRegistry from './pages/bank/CashRegistry';
 import DepositRegistry from './pages/bank/DepositRegistry';
 import CashReceiptCreate from './pages/bank/CashReceiptCreate';
 import CashDisbursementCreate from './pages/bank/CashDisbursementCreate';
+import FinancialTransactionCreate from './pages/bank/FinancialTransactionCreate';
 import ProformaInvoiceCreate from './pages/sales/ProformaInvoiceCreate';
 import SalesReturnCreate from './pages/sales/SalesReturnCreate';
 import StockIssueCreate from './pages/inventory/StockIssueCreate';
@@ -104,6 +106,10 @@ import BusinessTripCreate from './pages/hr/BusinessTripCreate';
 import SickLeaveCreate from './pages/hr/SickLeaveCreate';
 import PurchaseReceiptList from './pages/purchase/PurchaseReceiptList';
 import PurchaseInvoiceList from './pages/purchase/PurchaseInvoiceList';
+import PurchaseRequestList from './pages/purchase/PurchaseRequestList';
+import PurchaseRequestCreate from './pages/purchase/PurchaseRequestCreate';
+import PurchaseRequisitionList from './pages/purchase/PurchaseRequisitionList';
+import RequestForQuotationList from './pages/purchase/RequestForQuotationList';
 import PurchaseReturnWarehouseList from './pages/purchase/PurchaseReturnWarehouseList';
 import PurchaseReturnInvoiceList from './pages/purchase/PurchaseReturnInvoiceList';
 import Chat from './pages/apps/Chat';
@@ -177,6 +183,18 @@ import WebCatalog from './pages/web/WebCatalog';
 import WebOrders from './pages/web/WebOrders';
 import WebAnalytics from './pages/web/WebAnalytics';
 import WebSettings from './pages/web/WebSettings';
+import Landing from './pages/Landing';
+import Login from './pages/auth/Login';
+import Register from './pages/auth/Register';
+import ResetPassword from './pages/auth/ResetPassword';
+import ForgotPassword from './pages/auth/ForgotPassword';
+import AboutUs from './pages/landing/AboutUs';
+import FAQPage from './pages/landing/FAQ';
+import Blog from './pages/landing/Blog';
+import Training from './pages/landing/Training';
+import TransfersAndExchange from './pages/bank/TransfersAndExchange';
+import BalanceTurnoverReport from './pages/bank/BalanceTurnoverReport';
+import BankSettings from './pages/bank/BankSettings';
 import { useEffect } from 'react';
 
 const Placeholder = ({ title }: { title: string }) => (
@@ -191,17 +209,36 @@ const Placeholder = ({ title }: { title: string }) => (
   </div>
 );
 
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated } = useAuth();
+  if (!isAuthenticated) return <Navigate to="/landing" replace />;
+  return <>{children}</>;
+};
+
 import { LocalizationProvider } from './context/LocalizationContext';
 
 function App() {
   return (
     <LocalizationProvider>
-      <CompanyProvider>
-        <FormatProvider>
-          <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Layout />}>
-            <Route index element={<Dashboard />} />
+      <AuthProvider>
+        <CompanyProvider>
+          <FormatProvider>
+            <BrowserRouter>
+              <Routes>
+                {/* PUBLIC LANDING ROUTES */}
+                <Route path="/landing" element={<Landing />} />
+                <Route path="/about" element={<AboutUs />} />
+                <Route path="/faq" element={<FAQPage />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/training" element={<Training />} />
+                <Route path="/auth/login" element={<Login />} />
+                <Route path="/auth/register" element={<Register />} />
+                <Route path="/auth/reset-password" element={<ResetPassword />} />
+                <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+
+                {/* PROTECTED APP ROUTES */}
+                <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+                  <Route index element={<Dashboard />} />
             <Route path="sales" element={<SalesDashboard />} />
             <Route path="sales/dashboard" element={<SalesDashboard />} />
             <Route path="sales/list" element={<SalesList />} />
@@ -246,9 +283,14 @@ function App() {
             <Route path="purchase/receipt/list" element={<PurchaseReceiptList />} />
             <Route path="purchase/receipt/create" element={<GoodsReceiptCreate />} />
             <Route path="purchase/receipt/:id" element={<GoodsReceiptCreate />} />
+            <Route path="purchase/requests" element={<PurchaseRequestList />} />
+            <Route path="purchase/requests/create" element={<PurchaseRequestCreate />} />
+            <Route path="purchase/requisitions" element={<PurchaseRequisitionList />} />
             <Route path="purchase/requisitions/create" element={<PurchaseRequisitionCreate />} />
+            <Route path="purchase/rfq" element={<RequestForQuotationList />} />
             <Route path="purchase/rfq/create" element={<RequestForQuotationCreate />} />
             <Route path="purchase/quotations/comparison" element={<QuotationComparison />} />
+            <Route path="purchase/landed-cost" element={<Placeholder title="Maya Dəyəri Əlavələri Reyestri" />} />
             <Route path="purchase/landed-cost/create" element={<LandedCostCreate />} />
             <Route path="purchase/vendors" element={<VendorList />} />
             <Route path="purchase/vendors/create" element={<VendorCreate />} />
@@ -337,13 +379,15 @@ function App() {
             <Route path="bank/shv-tax" element={<DepositRegistry />} />
             <Route path="bank/shv-social" element={<DepositRegistry />} />
             <Route path="bank/transactions" element={<Bank />} />
-            <Route path="bank/transfers" element={<Placeholder title="Köçürmə və Transferlər" />} />
-            <Route path="bank/exchange" element={<Placeholder title="Valyuta Mübadiləsi" />} />
-            <Route path="bank/reports" element={<Placeholder title="Qalıqlar və Dövriyyələr" />} />
-            <Route path="bank/settings" element={<Placeholder title="Tənzimləmələr" />} />
+            <Route path="bank/transfers" element={<TransfersAndExchange />} />
+            <Route path="bank/exchange" element={<TransfersAndExchange />} />
+            <Route path="finance/currencies" element={<CurrencyList />} />
+            <Route path="bank/reports" element={<BalanceTurnoverReport />} />
+            <Route path="bank/settings" element={<BankSettings />} />
             <Route path="bank/cash/receipt/create" element={<CashReceiptCreate />} />
             <Route path="bank/cash/disbursement/create" element={<CashDisbursementCreate />} />
             <Route path="bank/payment/create" element={<BankPaymentCreate />} />
+            <Route path="bank/transactions/create" element={<FinancialTransactionCreate />} />
 
             <Route path="contracts" element={<ContractList />} />
             <Route path="contracts/create" element={<ContractCreate />} />
@@ -427,12 +471,16 @@ function App() {
           </Route>
           
           <Route path="pos" element={<POS />} />
-          <Route path="attendance-portal" element={<AttendancePortal />} />
-          <Route path="face-enrollment" element={<FaceEnrollment />} />
+            <Route path="attendance-portal" element={<AttendancePortal />} />
+            <Route path="face-enrollment" element={<FaceEnrollment />} />
+            
+            {/* Fallback */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           </BrowserRouter>
         </FormatProvider>
       </CompanyProvider>
+      </AuthProvider>
     </LocalizationProvider>
   );
 }
