@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "backend": "cd backend && node index.js",
+    "all": "npx concurrently \"npm run dev\" \"npm run backend\"",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import LandingHeader from '../../components/landing/LandingHeader';
 import LandingFooter from '../../components/landing/LandingFooter';
 import { Calendar, Clock, ArrowRight } from 'lucide-react';
@@ -64,6 +65,7 @@ const categoryColors: Record<string, string> = {
 };
 
 const Blog = () => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-white font-sans">
       <LandingHeader />
@@ -79,7 +81,11 @@ const Blog = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post, idx) => (
-              <article key={idx} className="group bg-white border-2 border-slate-100 rounded-3xl overflow-hidden hover:border-[#2D5BFF] hover:shadow-xl hover:shadow-blue-500/10 transition-all cursor-pointer">
+              <article 
+                key={idx} 
+                onClick={() => navigate(`/blog/${idx}`)}
+                className="group bg-white border-2 border-slate-100 rounded-3xl overflow-hidden hover:border-[#2D5BFF] hover:shadow-xl hover:shadow-blue-500/10 transition-all cursor-pointer"
+              >
                 <div className="h-48 bg-gradient-to-br from-slate-100 to-slate-200 relative">
                   <div className="absolute top-4 left-4">
                     <span className={`px-3 py-1 rounded-full text-xs font-black ${categoryColors[post.category] || 'bg-slate-100 text-slate-600'}`}>

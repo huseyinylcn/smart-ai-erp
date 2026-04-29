@@ -94,7 +94,8 @@ const LandingHeader = () => {
 
                     {/* NAV */}
                     <nav className="hidden lg:flex items-center space-x-1">
-                        <button 
+                        <Link 
+                            to="/overview/products"
                             onMouseEnter={() => setActiveMega('product')}
                             className={`px-4 py-2 text-sm font-bold uppercase tracking-widest flex items-center space-x-1 rounded-lg transition-all ${
                                 scrolled ? 'text-slate-600 hover:bg-slate-100' : 'text-white hover:bg-white/10'
@@ -102,9 +103,10 @@ const LandingHeader = () => {
                         >
                             <span>Məhsullar</span>
                             <ChevronDown className={`w-4 h-4 transition-transform ${activeMega === 'product' ? 'rotate-180' : ''}`} />
-                        </button>
+                        </Link>
 
-                        <button 
+                        <Link 
+                            to="/overview/solutions"
                             onMouseEnter={() => setActiveMega('solutions')}
                             className={`px-4 py-2 text-sm font-bold uppercase tracking-widest flex items-center space-x-1 rounded-lg transition-all ${
                                 scrolled ? 'text-slate-600 hover:bg-slate-100' : 'text-white hover:bg-white/10'
@@ -112,9 +114,10 @@ const LandingHeader = () => {
                         >
                             <span>Həllərimiz</span>
                             <ChevronDown className={`w-4 h-4 transition-transform ${activeMega === 'solutions' ? 'rotate-180' : ''}`} />
-                        </button>
+                        </Link>
 
-                        <button 
+                        <Link 
+                            to="/overview/integrations"
                             onMouseEnter={() => setActiveMega('integrations')}
                             className={`px-4 py-2 text-sm font-bold uppercase tracking-widest flex items-center space-x-1 rounded-lg transition-all ${
                                 scrolled ? 'text-slate-600 hover:bg-slate-100' : 'text-white hover:bg-white/10'
@@ -122,17 +125,19 @@ const LandingHeader = () => {
                         >
                             <span>İnteqrasiyalar</span>
                             <ChevronDown className={`w-4 h-4 transition-transform ${activeMega === 'integrations' ? 'rotate-180' : ''}`} />
-                        </button>
+                        </Link>
 
-                        {['Pricing', 'Partners', 'Why SBP'].map(item => (
+                        {[
+                            { name: 'Haqqımızda', to: '/about' }
+                        ].map(item => (
                             <Link 
-                                key={item} 
-                                to="#" 
+                                key={item.name} 
+                                to={item.to} 
                                 className={`px-4 py-2 text-sm font-bold uppercase tracking-widest rounded-lg transition-all ${
                                     scrolled ? 'text-slate-600 hover:bg-slate-100' : 'text-white hover:bg-white/10'
                                 }`}
                             >
-                                {item}
+                                {item.name}
                             </Link>
                         ))}
                     </nav>
@@ -162,13 +167,26 @@ const LandingHeader = () => {
                             )}
                         </div>
 
-                        <button onClick={() => navigate('/auth/login')} className={`flex items-center space-x-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm ${
-                            scrolled 
-                            ? 'bg-[#2D5BFF] text-white hover:bg-blue-600' 
-                            : 'bg-white text-[#2D5BFF] hover:bg-blue-50'
-                        }`}>
-                            <LogIn className="w-4 h-4" />
-                            <span>Daxil ol</span>
+                        <button 
+                            onClick={() => navigate('/auth/login')} 
+                            className={`px-6 py-2.5 rounded-xl font-bold text-sm transition-all border ${
+                                scrolled 
+                                ? 'text-[#2D5BFF] border-[#2D5BFF] hover:bg-[#2D5BFF] hover:text-white' 
+                                : 'text-white border-white/20 hover:bg-white/10'
+                            }`}
+                        >
+                            Daxil ol
+                        </button>
+                        <button 
+                            onClick={() => navigate('/pricing')} 
+                            className={`flex items-center space-x-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg hover:scale-105 ${
+                                scrolled 
+                                ? 'bg-[#2D5BFF] text-white shadow-blue-500/20' 
+                                : 'bg-white text-[#2D5BFF] shadow-white/10'
+                            }`}
+                        >
+                            <Zap className="w-4 h-4" />
+                            <span>Demo Sına</span>
                         </button>
                     </div>
 
@@ -184,9 +202,11 @@ const LandingHeader = () => {
                     <div className="max-w-7xl mx-auto flex min-h-[500px]">
                         <div className="w-1/4 bg-slate-50 border-r border-slate-100 p-8 space-y-2">
                             {productCategories.map(cat => (
-                                <button 
+                                <Link 
                                     key={cat.id}
+                                    to={`/product/${cat.id.toLowerCase()}`}
                                     onMouseEnter={() => setActiveSub(cat.id)}
+                                    onClick={() => setActiveMega(null)}
                                     className={`w-full flex items-center justify-between p-4 rounded-2xl transition-all ${
                                         activeSub === cat.id ? 'bg-[#2D5BFF] text-white shadow-lg' : 'text-slate-600 hover:bg-slate-200'
                                     }`}
@@ -196,10 +216,14 @@ const LandingHeader = () => {
                                         <span className="text-xs font-black uppercase tracking-widest">{cat.name}</span>
                                     </div>
                                     <ChevronDown className="w-4 h-4 -rotate-90 opacity-40" />
-                                </button>
+                                </Link>
                             ))}
                             <div className="pt-8 mt-8 border-t border-slate-200">
-                                <Link to="#" className="text-sm font-bold text-[#2D5BFF] hover:underline flex items-center space-x-2">
+                                <Link 
+                                    to="/all-modules" 
+                                    onClick={() => setActiveMega(null)}
+                                    className="text-sm font-bold text-[#2D5BFF] hover:underline flex items-center space-x-2"
+                                >
                                     <span>Bütün modullar</span>
                                     <ChevronDown className="w-4 h-4 -rotate-90" />
                                 </Link>
@@ -212,10 +236,15 @@ const LandingHeader = () => {
                             </div>
                             <div className="grid grid-cols-3 gap-x-12 gap-y-10">
                                 {collaborationFeatures.map((f, i) => (
-                                    <div key={i} className="group cursor-pointer">
+                                    <Link 
+                                        key={i} 
+                                        to={`/product/${activeSub.toLowerCase().replace(/\s+/g, '-')}/${f.title.toLowerCase().replace(/\s+/g, '-')}`}
+                                        onClick={() => setActiveMega(null)}
+                                        className="group block"
+                                    >
                                         <h4 className="font-black text-slate-800 mb-2 group-hover:text-[#2D5BFF] transition-colors">{f.title}</h4>
                                         <p className="text-sm text-slate-500 leading-relaxed line-clamp-3">{f.desc}</p>
-                                    </div>
+                                    </Link>
                                 ))}
                             </div>
                         </div>
@@ -229,14 +258,24 @@ const LandingHeader = () => {
                     <div className="max-w-7xl mx-auto p-12 grid grid-cols-5 gap-10">
                         {solutionsData.map(col => (
                             <div key={col.title}>
-                                <div className="flex items-center space-x-2 mb-8 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                <Link 
+                                    to={`/product/solutions/${col.title.toLowerCase().replace(/\s+/g, '-')}`}
+                                    onClick={() => setActiveMega(null)}
+                                    className="flex items-center space-x-2 mb-8 bg-slate-50 p-4 rounded-2xl border border-slate-100 hover:bg-blue-50 hover:border-[#2D5BFF] transition-all group"
+                                >
                                     <col.icon className="w-5 h-5 text-[#2D5BFF]" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-800">{col.title}</span>
-                                </div>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-800 group-hover:text-[#2D5BFF] transition-colors">{col.title}</span>
+                                </Link>
                                 <ul className="space-y-4">
                                     {col.items.map(item => (
                                         <li key={item}>
-                                            <Link to="#" className="text-sm font-semibold text-slate-600 hover:text-[#2D5BFF] transition-colors">{item}</Link>
+                                            <Link 
+                                                to={`/product/solutions/${item.toLowerCase().replace(/\s+/g, '-')}`} 
+                                                onClick={() => setActiveMega(null)}
+                                                className="text-sm font-semibold text-slate-600 hover:text-[#2D5BFF] transition-colors"
+                                            >
+                                                {item}
+                                            </Link>
                                         </li>
                                     ))}
                                 </ul>
@@ -252,17 +291,27 @@ const LandingHeader = () => {
                     <div className="max-w-7xl mx-auto p-12 grid grid-cols-4 gap-12">
                         {integrationsData.map(col => (
                             <div key={col.title}>
-                                <div className="flex items-center space-x-3 mb-8 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                <Link 
+                                    to={`/product/integrations/${col.title.toLowerCase().replace(/\s+/g, '-')}`}
+                                    onClick={() => setActiveMega(null)}
+                                    className="flex items-center space-x-3 mb-8 bg-slate-50 p-4 rounded-2xl border border-slate-100 hover:bg-blue-50 hover:border-[#2D5BFF] transition-all group"
+                                >
                                     <col.icon className="w-5 h-5 text-[#2D5BFF]" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-800">{col.title}</span>
-                                </div>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-800 group-hover:text-[#2D5BFF] transition-colors">{col.title}</span>
+                                </Link>
                                 <ul className="space-y-4">
                                     {col.items.map(item => (
-                                        <li key={item} className="flex items-center space-x-3 group cursor-pointer">
-                                            <div className="w-6 h-6 bg-slate-100 rounded-md flex items-center justify-center group-hover:bg-[#2D5BFF] transition-colors">
-                                                <Zap className="w-3 h-3 text-slate-400 group-hover:text-white" />
-                                            </div>
-                                            <span className="text-sm font-semibold text-slate-600 group-hover:text-slate-900 transition-colors">{item}</span>
+                                        <li key={item}>
+                                            <Link 
+                                                to={`/product/integrations/${item.toLowerCase().replace(/\s+/g, '-')}`}
+                                                onClick={() => setActiveMega(null)}
+                                                className="flex items-center space-x-3 group cursor-pointer"
+                                            >
+                                                <div className="w-6 h-6 bg-slate-100 rounded-md flex items-center justify-center group-hover:bg-[#2D5BFF] transition-colors">
+                                                    <Zap className="w-3 h-3 text-slate-400 group-hover:text-white" />
+                                                </div>
+                                                <span className="text-sm font-semibold text-slate-600 group-hover:text-slate-900 transition-colors">{item}</span>
+                                            </Link>
                                         </li>
                                     ))}
                                 </ul>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 // SVG Social Icons (lucide-react doesn't export Facebook/Instagram/etc.)
 const FacebookIcon = () => (
@@ -51,21 +52,22 @@ const LandingFooter = () => {
             { name: 'Bakı, N.Nərimanov Luxen Plaza', sub: '' },
             { name: 'Post index: AZ1011', sub: '' }
         ]},
-        { title: 'Menu', links: [
-            { name: 'Product', path: '/platform' },
-            { name: 'Industries', path: '/industries' },
+        { title: 'MENU', links: [
+            { name: 'Product', path: '/all-products' },
+            { name: 'Industries', path: '/product/solutions/industry' },
             { name: 'Explore SBP', path: '/explore' },
+            { name: 'Pricing', path: '/pricing' },
             { name: 'Learning Program', path: '/training' },
             { name: 'Careers', path: '/careers' },
-            { name: 'FAQ', path: '/faq' }
+            { name: 'Helpdesk', path: '/helpdesk' }
         ]},
         { title: 'Term & Conditions', links: [
-            { name: 'Privacy', path: '/privacy' },
-            { name: 'Terms of Use', path: '/terms' },
+            { name: 'Privacy', path: '/legal' },
+            { name: 'Terms of Use', path: '/legal' },
             { name: 'Legal Disclosure', path: '/legal' },
-            { name: 'Copyright', path: '/copyright' },
-            { name: 'Trademark', path: '/trademark' },
-            { name: 'Cookie Preferences', path: '/cookies' }
+            { name: 'Copyright', path: '/legal' },
+            { name: 'Trademark', path: '/legal' },
+            { name: 'Cookie Preferences', path: '/legal' }
         ]}
     ];
 
@@ -89,7 +91,7 @@ const LandingFooter = () => {
                             <ul className="space-y-4">
                                 {section.links.map((link) => (
                                     <li key={link.name}>
-                                        <a href={(link as any).path || '#'} className="text-sm font-medium text-slate-500 hover:text-[#2D5BFF] transition-colors">{link.name}</a>
+                                        <Link to={(link as any).path || '#'} className="text-sm font-medium text-slate-500 hover:text-[#2D5BFF] transition-colors">{link.name}</Link>
                                     </li>
                                 ))}
                             </ul>

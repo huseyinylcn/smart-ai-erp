@@ -191,7 +191,22 @@ import ForgotPassword from './pages/auth/ForgotPassword';
 import AboutUs from './pages/landing/AboutUs';
 import FAQPage from './pages/landing/FAQ';
 import Blog from './pages/landing/Blog';
+import BlogDetail from './pages/landing/BlogDetail';
+import ModuleDetail from './pages/landing/ModuleDetail';
+import InfoPage from './pages/landing/InfoPage';
+import Careers from './pages/landing/Careers';
+import LegalPage from './pages/landing/LegalPage';
+import Helpdesk from './pages/landing/Helpdesk';
+import AllProducts from './pages/landing/AllProducts';
+import AllModules from './pages/landing/AllModules';
+import SectionOverview from './pages/landing/SectionOverview';
+import ExplorePlatform from './pages/landing/ExplorePlatform';
+import PricingConfigurator from './pages/landing/PricingConfigurator';
+import ProductPage from './pages/landing/ProductPage';
 import Training from './pages/landing/Training';
+import HelpdeskApp from './pages/apps/Helpdesk';
+import HelpdeskAdmin from './pages/admin/HelpdeskAdmin';
+import SystemAdminPortal from './pages/admin/SystemAdminPortal';
 import TransfersAndExchange from './pages/bank/TransfersAndExchange';
 import BalanceTurnoverReport from './pages/bank/BalanceTurnoverReport';
 import BankSettings from './pages/bank/BankSettings';
@@ -216,6 +231,15 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 import { LocalizationProvider } from './context/LocalizationContext';
+import { useLocation } from 'react-router-dom';
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
 
 function App() {
   return (
@@ -224,17 +248,36 @@ function App() {
         <CompanyProvider>
           <FormatProvider>
             <BrowserRouter>
+              <ScrollToTop />
               <Routes>
                 {/* PUBLIC LANDING ROUTES */}
                 <Route path="/landing" element={<Landing />} />
                 <Route path="/about" element={<AboutUs />} />
                 <Route path="/faq" element={<FAQPage />} />
                 <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:id" element={<BlogDetail />} />
+                <Route path="/modules/:id" element={<ModuleDetail />} />
+                <Route path="/info/:slug" element={<InfoPage />} />
+                <Route path="/helpdesk" element={<Helpdesk />} />
+                <Route path="/all-products" element={<AllProducts />} />
+                <Route path="/all-modules" element={<AllModules />} />
+                <Route path="/overview/:section" element={<SectionOverview />} />
+                <Route path="/explore" element={<ExplorePlatform />} />
+                <Route path="/pricing" element={<PricingConfigurator />} />
+                <Route path="/product/:category" element={<ProductPage />} />
+                <Route path="/product/:category/:slug" element={<ProductPage />} />
+                <Route path="/careers" element={<Careers />} />
+                <Route path="/careers" element={<Careers />} />
+                <Route path="/legal" element={<LegalPage />} />
+                <Route path="/privacy" element={<LegalPage />} />
+                <Route path="/terms" element={<LegalPage />} />
                 <Route path="/training" element={<Training />} />
                 <Route path="/auth/login" element={<Login />} />
                 <Route path="/auth/register" element={<Register />} />
                 <Route path="/auth/reset-password" element={<ResetPassword />} />
                 <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+                <Route path="/admin-panel" element={<SystemAdminPortal />} />
+                <Route path="/system-admin" element={<SystemAdminPortal />} />
 
                 {/* PROTECTED APP ROUTES */}
                 <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
@@ -419,6 +462,7 @@ function App() {
             <Route path="roles-permissions" element={<RolesPermissions />} />
             
             <Route path="app/chat" element={<Chat />} />
+            <Route path="app/helpdesk" element={<HelpdeskApp />} />
             <Route path="app/calendar" element={<Calendar />} />
             <Route path="app/email" element={<Email />} />
             <Route path="app/files" element={<FileManager />} />
@@ -450,6 +494,7 @@ function App() {
             <Route path="ai/gov-integrations" element={<GovernmentIntegrations />} />
             
             {/* ERP Admin Panel AI Agents */}
+            <Route path="admin/helpdesk" element={<HelpdeskAdmin />} />
             <Route path="ai/dev-assistant" element={<AIAgentAssistant title="Aİ İnkişaf Köməkçisi" subtitle="Sistem İnkişafı və UX Optimallaşdırılması" type="dev" />} />
             <Route path="ai/template-builder" element={<AIAgentAssistant title="Aİ Şablon Qurucu" subtitle="Dinamik Sənəd və Hesabat Şablonları" type="template" />} />
             <Route path="ai/strategic-advisor" element={<AIAgentAssistant title="Aİ Strateji Məsləhətçi" subtitle="Biznes Böyüməsi və Strateji Analiz" type="strategic" />} />

@@ -50,6 +50,7 @@ export const menuConfig: SidebarItem[] = [
       { name: 'Dövlət İnteqrasiyaları', path: '/ai/gov-integrations', keyHint: 'G' },
       { name: 'Aİ Hesabat Mərkəzi', path: '/ai/report-center', keyHint: 'H' },
       { name: 'Aİ Admin Analizi', path: '/ai/admin-analysis', icon: Sparkles },
+      { name: 'Helpdesk İdarəetməsi', path: '/admin/helpdesk', keyHint: 'H' },
       { name: 'Aİ Dashboard Qurucu', path: '/ai/dashboard-creator', keyHint: 'D' }
     ]
   },
@@ -85,7 +86,8 @@ export const menuConfig: SidebarItem[] = [
       { name: 'Fayl Meneceri', path: '/app/files', keyHint: 'F' },
       { name: 'Lövhələr', path: '/app/boards', keyHint: 'B' },
       { name: 'Collabs', path: '/app/collabs', keyHint: 'K' },
-      { name: 'Rezervasiya', path: '/app/booking', keyHint: 'B' }
+      { name: 'Rezervasiya', path: '/app/booking', keyHint: 'B' },
+      { name: 'Helpdesk', path: '/app/helpdesk', keyHint: 'H' }
     ]
   },
 

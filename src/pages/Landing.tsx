@@ -8,6 +8,9 @@ import {
   CheckCircle, Zap, Brain, Shield, TrendingUp, ArrowRight
 } from 'lucide-react';
 
+import tarsaLogo from '../assets/tarsa_logo.png';
+import payrollScreenshot from '../assets/payroll_screenshot.png';
+
 const modules = [
   { name: 'HRM', icon: Users, color: 'bg-blue-500', desc: 'İnsan resurslarının idarəsi' },
   { name: 'ERP', icon: BarChart2, color: 'bg-violet-500', desc: 'Müəssisə resurs planlaması' },
@@ -26,12 +29,12 @@ const aiFeatures = [
 ];
 
 const integrations = [
-  { name: 'Expressbank', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Expressbank_logo.svg/1200px-Expressbank_logo.svg.png' },
-  { name: 'Pasha Bank', logo: 'https://upload.wikimedia.org/wikipedia/az/d/d7/Pasha_Bank_Logo.png' },
+  { name: 'Expressbank', logo: 'https://vun.kapitalbank.az/assets/images/expressbank.png' },
+  { name: 'Pasha Bank', logo: 'https://www.pashabank.az/static/images/pasha_logo_az.png' },
   { name: 'Kapital Bank', logo: 'https://upload.wikimedia.org/wikipedia/az/thumb/8/87/Kapital_Bank_Logo.png/1200px-Kapital_Bank_Logo.png' },
   { name: 'ABB', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/ABB_International_Bank_Logo.svg' },
   { name: 'AccessBank', logo: 'https://upload.wikimedia.org/wikipedia/az/thumb/d/d9/AccessBank_logo.png/1200px-AccessBank_logo.png' },
-  { name: 'Trello', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Trello_logo.svg/1200px-Trello_logo.svg.png' },
+  { name: 'Trello', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Trello_logo.svg/1280px-Trello_logo.svg.png' },
   { name: 'Power BI', logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c9/Power_bi_logo.svg' },
   { name: 'Tableau', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Tableau_Logo.png' },
 ];
@@ -81,7 +84,7 @@ const faqs = [
 ];
 
 const clientLogos = [
-  'Coca-Cola', 'Intel', 'Adobe', 'Figma', 'Microsoft', 'Cisco', 'Netflix'
+  { name: 'TAR SA Group', logo: tarsaLogo, url: 'https://tarsagroup.az/' }
 ];
 
 const Landing = () => {
@@ -108,14 +111,14 @@ const Landing = () => {
           <p className="text-lg text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed">
             SBP həlləri gələcək imkanlardan istifadə etmək üçün təməl qurarkən biznesinizi bugünkü problemləri həll etmək üçün təchiz edir.
           </p>
-          <button className="px-8 py-4 bg-white text-[#2D5BFF] rounded-full font-black text-sm hover:scale-105 transition-all shadow-xl flex items-center space-x-3 mx-auto">
-            <Phone className="w-4 h-4" />
-            <span>Görüş tələb et</span>
+          <button onClick={() => navigate('/pricing')} className="px-8 py-4 bg-white text-[#2D5BFF] rounded-full font-black text-sm hover:scale-105 transition-all shadow-xl flex items-center space-x-3 mx-auto">
+            <Zap className="w-4 h-4" />
+            <span>Demo Sına</span>
           </button>
         </div>
 
         {/* VIDEO EMBED */}
-        <div className="relative max-w-5xl mx-auto px-4 pb-20 -mb-20">
+        <div className="relative max-w-5xl mx-auto px-4 pb-32">
           <div className="aspect-video bg-slate-900 rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white/10 group relative">
             <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" className="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity" alt="Demo Video" />
             <div className="absolute inset-0 flex items-center justify-center">
@@ -129,17 +132,53 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* SPACING FOR VIDEO OVERLAP */}
-      <div className="h-32 bg-white" />
+      {/* WHY SBP */}
+      <section className="py-24 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <span className="text-xs font-black text-[#2D5BFF] uppercase tracking-widest">Niyə SBP?</span>
+            <h2 className="text-4xl font-black text-slate-900 mt-4 mb-6">Biznesinizi rəqəmsallaşdıran<br />vahid platforma</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div className="bg-white p-10 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all border border-slate-100">
+              <div className="w-14 h-14 bg-blue-50 text-[#2D5BFF] rounded-2xl flex items-center justify-center mb-8">
+                <Shield className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-black text-slate-800 mb-4">Təhlükəsizlik və Güvən</h3>
+              <p className="text-slate-500 leading-relaxed font-medium">Məlumatlarınız ən yüksək standartlarla qorunur və gündəlik olaraq yedəklənir.</p>
+            </div>
+            <div className="bg-white p-10 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all border border-slate-100">
+              <div className="w-14 h-14 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center mb-8">
+                <Zap className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-black text-slate-800 mb-4">Sürətli İnteqrasiya</h3>
+              <p className="text-slate-500 leading-relaxed font-medium">Mövcud sistemlərinizlə asanlıqla inteqrasiya olunur və işinizi sürətləndirir.</p>
+            </div>
+            <div className="bg-white p-10 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all border border-slate-100">
+              <div className="w-14 h-14 bg-violet-50 text-violet-500 rounded-2xl flex items-center justify-center mb-8">
+                <BarChart2 className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-black text-slate-800 mb-4">Dərin Analitika</h3>
+              <p className="text-slate-500 leading-relaxed font-medium">Süni intellekt dəstəkli hesabatlarla gələcəyi proqnozlaşdırın.</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* CLIENT LOGOS (Screen 5 style) */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap justify-center lg:justify-between items-center gap-12 grayscale opacity-30 hover:grayscale-0 hover:opacity-100 transition-all duration-1000">
-            {clientLogos.map((logo) => (
-              <div key={logo} className="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter hover:scale-110 transition-transform cursor-default">
-                {logo}
-              </div>
+          <div className="flex flex-wrap justify-center items-center gap-12 grayscale opacity-30 hover:grayscale-0 hover:opacity-100 transition-all duration-1000">
+            {clientLogos.map((item) => (
+              <a 
+                key={item.name} 
+                href={item.url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="h-20 flex items-center justify-center transition-transform hover:scale-110"
+              >
+                <img src={item.logo} alt={item.name} className="max-h-full object-contain" />
+              </a>
             ))}
           </div>
         </div>
@@ -155,7 +194,11 @@ const Landing = () => {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {modules.map((mod) => (
-              <div key={mod.name} className="group bg-white border-2 border-slate-100 rounded-3xl p-8 hover:border-[#2D5BFF] hover:shadow-2xl hover:shadow-blue-500/10 transition-all cursor-pointer">
+              <div 
+                key={mod.name} 
+                onClick={() => navigate(`/modules/${mod.name}`)}
+                className="group bg-white border-2 border-slate-100 rounded-3xl p-8 hover:border-[#2D5BFF] hover:shadow-2xl hover:shadow-blue-500/10 transition-all cursor-pointer"
+              >
                 <div className={`w-14 h-14 ${mod.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg`}>
                   <mod.icon className="w-7 h-7 text-white" />
                 </div>
@@ -209,19 +252,19 @@ const Landing = () => {
               </div>
             </div>
 
-            <div className="flex-1 relative scale-110 lg:scale-125 lg:translate-x-10">
-              {/* Laptop Mockup */}
-              <div className="relative mx-auto border-gray-800 dark:border-gray-800 bg-gray-800 border-[8px] rounded-t-xl h-[172px] max-w-[301px] md:h-[294px] md:max-w-[512px]">
-                <div className="rounded-lg overflow-hidden h-[156px] md:h-[278px] bg-white">
-                  <img src="https://i.ibb.co/LhbVpB5/Screenshot-2024-04-27-at-00-43-25.png" className="h-[156px] md:h-[278px] w-full object-cover" alt="SmartAgent AI" />
+            <div className="flex-1 relative scale-110 lg:scale-110">
+              {/* Laptop Mockup (Sleeker Version) */}
+              <div className="relative mx-auto border-gray-900 bg-gray-900 border-[6px] rounded-t-2xl h-[180px] max-w-[320px] md:h-[300px] md:max-w-[540px] shadow-2xl">
+                <div className="rounded-lg overflow-hidden h-[168px] md:h-[288px] bg-white">
+                  <img src={payrollScreenshot} className="h-full w-full object-cover" alt="SmartAgent Dashboard" />
                 </div>
               </div>
-              <div className="relative mx-auto bg-gray-900 dark:bg-gray-700 rounded-b-xl rounded-t-sm h-[17px] max-w-[351px] md:h-[21px] md:max-w-[597px]">
-                <div className="absolute left-1/2 top-0 -translate-x-1/2 rounded-b-xl w-[56px] h-[5px] md:w-[96px] md:h-[8px] bg-gray-800"></div>
+              <div className="relative mx-auto bg-gray-800 rounded-b-2xl h-[12px] max-w-[380px] md:h-[16px] md:max-w-[620px] shadow-lg">
+                <div className="absolute left-1/2 top-0 -translate-x-1/2 rounded-b-xl w-[60px] h-[4px] md:w-[100px] md:h-[6px] bg-gray-950/20"></div>
               </div>
               
               {/* Decorative Glow */}
-              <div className="absolute -inset-10 bg-[#2D5BFF]/10 blur-3xl rounded-full -z-10" />
+              <div className="absolute -inset-20 bg-[#2D5BFF]/5 blur-[100px] rounded-full -z-10" />
             </div>
           </div>
         </div>
@@ -244,7 +287,11 @@ const Landing = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {blogPosts.map((post, idx) => (
-              <div key={idx} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-slate-100 group">
+              <div 
+                key={idx} 
+                onClick={() => navigate(`/blog/${idx}`)}
+                className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-slate-100 group cursor-pointer"
+              >
                 <div className={`h-64 ${post.color} flex items-center justify-center p-8`}>
                   <img src={post.image} alt={post.title} className="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-500" />
                 </div>
